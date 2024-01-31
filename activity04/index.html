@@ -1,0 +1,84 @@
+<p>Student name : Bo Oo</p>
+<p>email : bhoo@iastate.edu</p>
+<p>date : Jan 29, 2024</p>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css"> <!-- relative path, this will link the css file to html -->
+    <style>
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .project {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+    </style>
+
+    <title>Bo Oo - Portfolio</title>
+
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+               <li><a href="#about">About Me</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <section id = "about">
+        <div class="container">
+
+            <img src="./images/profile.jpg" alt="Profile Photo"> <!-- relative path, this will link the image to html -->
+            <h1>Bo H. Oo</h1>
+            <p style = "font-family: 'Courier New', Courier, monospace; color: brown">Software Engineering Student</p>
+            <p>I'm currently a <strong>Sophmore in Software Engineering</strong>. I'm currently taking <span>SE 309,311, COM S 321, Math 207</span> as well as <span>COM S 295</span>.</p>
+            <p>I am looking forward to this year and this class!</p>
+        
+        </div>
+    </section>
+ 
+    <section id = "projects">
+        <div class="container">
+        <h2>Projects</h2>
+        <div class="project">
+            <img src="./images/project1.png" alt="Project 1">
+            <h3>Project 1</h3>
+            <p>The first project is related to develop a single Web page using 
+                only two technlogies: HTML ad CSS. The project consists in 
+                creating a single web page with a menu at the top known as 
+                Navigation Bar. We have to include 
+                text describing ourself and text decribing the project. Aditionally, we have to include a picture of ourself and second image is annything 
+                related to the project itself.</p>
+            </div>
+                    add more project divs here
+        </div>
+
+    </section>
+
+    <section id = "contact">
+        <div class="container">
+            <h2>Contact me</h2>
+            <p>You can reach me at bhoo@iastate.edu</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Bo H. Oo</p>
+
+    </footer>
+
+
+</body>
+</html>

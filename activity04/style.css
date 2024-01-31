@@ -1,0 +1,65 @@
+/* The 'header' selector targets the <header> HTML element */
+header{
+    /* The 'background-color' property sets the background color of the element */
+    background-color: #333; /* This is a dark grey color */
+
+    /* The 'color' property sets the text color of the element */
+    color: #fff; /* This is white color */
+
+    /* The 'padding' property sets the space around the content of the element */
+    /* The value '10px 0' means 1px top and bottom padding, and 0 left and right padding */
+    padding: 10px 0;
+}
+
+/* The 'nav ul' selector targets the <ul> element inside a <nav> element */
+nav ul{
+    /* The 'list-style' property sets the style of the list item marker */
+    /* The value 'none' means no marker is shown */
+    list-style: none;
+
+    /* The 'display' property sets how an element should be displayed */
+    /* The value 'flex' means the element will be displayed as a block-level flex container */
+    display: flex;
+
+    /* The 'justify-content' property aligns the flexible container's items when the items do not use all available space */
+    /* The value 'center' means items are positioned at the center of the container */
+    justify-content: center;
+}
+
+/* The 'nav ul li' selector targets the <li> element inside a <ul> element inside a <nav> element */
+nav li{
+    margin: 0 20px; /* This sets the margin of the element to 0 top and bottom, and 20px left and right */
+}
+
+/* The 'nav ul li' selector targets the <li> element inside a <ul> element inside a <nav> element */
+nav a{
+    text-decoration: none; /* This removes the underline from the link */
+    color: #fff; /* This sets the color of the link to white */
+}
+
+
+/* The 'nav ul li a:hover' selector targets the <a> element inside a <li> element inside a <ul> element inside a <nav> element when the mouse is over it */
+span{
+    text-transform: uppercase; /* This sets the text to uppercase */
+    font-weight: bold; /* This sets the font weight to bold */
+}
+
+/* The 'main' selector targets the <main> HTML element */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+
+}
+
+
+img{
+    max-width: 100%;
+}
+
+footer{
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+}
