@@ -3,3 +3,21 @@
 <p>email : bhoo@iastate.edu</p>
 <p>date : Feb 2, 2024</p>
 */
+
+/* The 'header' selector targets the <header> HTML element */
+header{
+    /* The 'background-color' property sets the background color of the element */
+    background-color: #333; /* This is a dark grey color */
+
+    /* The 'color' property sets the text color of the element */
+    color: #fff; /* This is white color */
+
+    /* The 'padding' property sets the space around the content of the element */
+    /* The value '10px 0' means 1px top and bottom padding, and 0 left and right padding */
+    padding: 10px 0;
+}
+
+.container ul p{ /* The 'nav ul' selector targets the <ul> element inside a <nav> element */
+    text-align: center;
+    font-size: 20px;
+}
