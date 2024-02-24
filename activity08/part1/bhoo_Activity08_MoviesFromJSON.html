@@ -22,11 +22,18 @@ Activity07
     <form id="my_form">
       <p>
         Movie name: <input type="text" name="inputMovieName" value="Avengers" />
+        
       </p>
-      <button type="button" onclick="getInputValue();">
+        
+      <!-- <button type="button" onclick="getInputValue();">
         Consult the movie
-      </button>
+      </button> -->
     </form>
   </body>
   <script src="./bhoo_Activity08_MoviesFromJSON.js"></script>
+  <script> // call the function as soon as the page is displayed
+    window.onload = function() {
+      getInputValue();
+    }
+  </script>
 </html>

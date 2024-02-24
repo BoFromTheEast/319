@@ -25,28 +25,26 @@ function getInputValue() {
     // Loop through each movie in the JSON data
     for (var i = 0; i < myMovies.movies.length; i++) {
       // If the movie title matches the user's input
-      if (myMovies.movies[i].title === inputMovieName) {
-        // Create a new div
-        var div = document.createElement("div");
-        // Store the current movie in a variable
-        var movie = myMovies.movies[i];
+      // Create a new div
+      var div = document.createElement("div");
+      // Store the current movie in a variable
+      var movie = myMovies.movies[i];
 
-        // Set the inner HTML of the div to the movie details
-        div.innerHTML = `<br>
+      // Set the inner HTML of the div to the movie details
+      div.innerHTML = `<br>
           MovieId = ${movie.movieId} <br>
           Title = ${movie.title} <br>
-          Year = ${movie.year} `;
+          Year = ${movie.year} <br>`;
 
-        // Create a new img element
-        var img = document.createElement("img");
-        // Set the src of the img element to the movie's picture URL
-        img.src = movie.url;
-        // Append the img element to the div
-        div.appendChild(img);
+      // Create a new img element
+      var img = document.createElement("img");
+      // Set the src of the img element to the movie's picture URL
+      img.src = movie.url;
+      // Append the img element to the div
+      div.appendChild(img);
 
-        // Append the div to the main container
-        mainContainer.appendChild(div);
-      }
+      // Append the div to the main container
+      mainContainer.appendChild(div);
     }
   }
 }
