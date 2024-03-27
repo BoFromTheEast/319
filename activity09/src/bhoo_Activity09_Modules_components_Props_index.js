@@ -1,11 +1,14 @@
-//NetID : bhoo
-//Author: Bo Oo
-//Assignment: Activity 09
-//Date: 03/25/2024
+// Author: Bo Oo
+// ISU Netid : bhoo
+// Date : March 26th, 2024
 
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { UserCard } from "./UserCards.js";
+
+//init React :
+const rootElement = document.getElementById("root"); // get the root element
+const root = ReactDOM.createRoot(rootElement); // create a root
 
 root.render(
   <div>
@@ -18,6 +21,7 @@ world's-mark-zuckerberg-chief-thumb.png"
       points={[100, 101.1, 202, 2]}
       address={{ street: "123 Bellmont Rd.", city: "Ames", state: "Iowa" }}
     />
+    And a second card :
     <UserCard
       picture="https://freepngimg.com/thumb/bill_gates/170351-gates-bill-face-hq-image-
 free.png"
@@ -28,4 +32,4 @@ free.png"
       address={{ street: "5010 Av Some", city: "Tempe", state: "AZ" }}
     />
   </div>
-);
+); // render the element
