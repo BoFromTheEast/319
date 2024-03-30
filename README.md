@@ -1,3 +1,3 @@
-# 319
+# SE 319
 
-This repo will be used for the purpose of SE/COMS 319 projects,activites,and homeworks.
+This repo will be used for SE/COMS 319 projects, activities, and homework.
