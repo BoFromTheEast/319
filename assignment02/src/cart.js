@@ -1,12 +1,45 @@
-import React from "react";
-import CheckoutForm from "./Checkout";
+// imports
+import React, { useState } from "react";
+import CheckoutForm from "./Checkout"; 
+import ConfirmationView from "./Confirmation";
 
-const Cart = ({ cart, addToCart, removeFromCart, clearCart, onCheckout }) => {
+const Cart = ({ cart, addToCart, removeFromCart, clearCart, onCheckout, handleContinueShopping }) => {
+
+
+
+  // state to determine if checkout has been completed
+  const [checkoutComplete, setCheckoutComplete] = useState(false);
+  //save order details 
+  const [orderDetails, setOrderDetails] = useState({});
+
+
   const itemsInCart = Object.values(cart);
   const totalPrice = itemsInCart.reduce(
     (total, { price, quantity }) => total + price * quantity,
     0
   );
+  const handleCheckoutSubmit = (formData) => {
+    console.log('Checkout data:', formData);
+    setOrderDetails({
+      items: itemsInCart,
+      totalAmount: totalPrice,
+      userInfo: formData,
+    });
+    setCheckoutComplete(true);
+  };
+
+
+  const handleNavigateBack = () => {
+    clearCart(); 
+    setCheckoutComplete(false); 
+  };
+
+
+  if (checkoutComplete) {
+    return <ConfirmationView orderDetails={orderDetails} onNavigateBack={handleNavigateBack} onContinueShopping={handleContinueShopping} />;
+  }
+
+
 
   return (
     <div className="p-4">
@@ -44,6 +77,7 @@ const Cart = ({ cart, addToCart, removeFromCart, clearCart, onCheckout }) => {
           </ul>
           <div className="mt-4">
             <strong>Total Price: ${totalPrice.toFixed(2)}</strong>
+            <CheckoutForm onSubmit={handleCheckoutSubmit} setCheckoutComplete={setCheckoutComplete}/>
           </div>
           <div className="mt-4 flex justify-between">
             <button
@@ -51,13 +85,6 @@ const Cart = ({ cart, addToCart, removeFromCart, clearCart, onCheckout }) => {
               className="px-4 py-2 bg-blue-500 text-white rounded"
             >
               Clear Cart
-            </button>
-            {/* Proceed to Checkout Button */}
-            <button
-              onClick={onCheckout}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Proceed to Checkout
             </button>
           </div>
         </div>
@@ -67,5 +94,5 @@ const Cart = ({ cart, addToCart, removeFromCart, clearCart, onCheckout }) => {
     </div>
   );
 };
-
 export default Cart;
+

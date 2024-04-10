@@ -1,3 +1,5 @@
+
+//imports
 import "./App.css";
 import React, { useState } from "react";
 import { Products } from "./Products";
@@ -7,6 +9,7 @@ import Cart from "./cart";
 // ProductList Component
 const ProductList = ({ ProductsCategory, addToCart, removeFromCart, cart }) => {
   return (
+    //list all items with picture and description and option to add or remove from cart
     <div className="category-section overflow-auto">
       <h2 className="text-3xl font-extrabold tracking-tight text-gray-600 category-title">
         Products ({ProductsCategory.length})
@@ -14,7 +17,7 @@ const ProductList = ({ ProductsCategory, addToCart, removeFromCart, cart }) => {
       <div className="m-6 p-3 mt-10 ml-0 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-6 xl:gap-x-10">
         {ProductsCategory.map((product, index) => (
           <div key={index} className="group relative shadow-lg">
-            {/* Product Image and Details */}
+            {/*image and description*/}
             <div className="min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-60 lg:aspect-none">
               <img
                 alt="Product"
@@ -26,14 +29,14 @@ const ProductList = ({ ProductsCategory, addToCart, removeFromCart, cart }) => {
               <div>
                 <h3 className="text-sm text-gray-700">{product.title}</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Rating: {product.rating.rate}
+                  Description: {product.description}
                 </p>
               </div>
               <p className="text-sm font-medium text-green-600">
                 ${product.price}
               </p>
             </div>
-            {/* Add and Remove Buttons */}
+            {/* add/remove buttons */}
             <div className="flex justify-between items-center p-3">
               <button
                 className="px-2 py-1 border rounded text-green-800 border-green-600 hover:bg-green-600 hover:text-white"
@@ -55,14 +58,14 @@ const ProductList = ({ ProductsCategory, addToCart, removeFromCart, cart }) => {
     </div>
   );
 };
-
+//app component
 const App = () => {
   const [ProductsCategory, setProductsCategory] = useState(Products);
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState({});
   const [currentView, setCurrentView] = useState("browse"); // 'browse', 'cart', or 'checkout'
 
-  // Add to Cart
+  //add to cart
   const addToCart = (product) => {
     setCart((prevCart) => {
       const quantity = prevCart[product.id]
@@ -72,7 +75,7 @@ const App = () => {
     });
   };
 
-  // Remove from Cart
+  // remove from cart
   const removeFromCart = (product) => {
     setCart((prevCart) => {
       if (!prevCart[product.id]) return prevCart;
@@ -92,18 +95,14 @@ const App = () => {
   };
 
   const handleCheckoutSubmit = (formData) => {
-    // Process checkout here (e.g., send data to your backend)
-    console.log(formData); // For demonstration
-
-    // Clear the cart after successful checkout
+    console.log(formData); 
+    //clear cart after checkout
     setCart({});
-
-    // Navigate to a confirmation view or back to browsing
+    //navigate to browse view
     setCurrentView("browse");
-    // Optionally, implement a confirmation view and navigate there instead
   };
 
-  // Handle search change
+  //handle searches
   const handleChange = (e) => {
     setQuery(e.target.value);
     const results = Products.filter((product) =>
@@ -112,7 +111,12 @@ const App = () => {
     setProductsCategory(results);
   };
 
-  // Calculate total items in the cart
+      // let shopping be used in confirmation view
+      const handleContinueShopping = () => {
+        setCart({});
+        setCurrentView("browse");
+      };
+  // calculate total 
   const totalItems = Object.values(cart).reduce(
     (acc, { quantity }) => acc + quantity,
     0
@@ -122,10 +126,11 @@ const App = () => {
     setCurrentView("checkout");
   };
 
+//jsx
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-grow">
       <header className="bg-slate-800 p-3 text-white w-full flex justify-between items-center">
-        {/* Search Bar, only show if in 'browse' view */}
+        {/*search bar logic*/}
         {currentView === "browse" && (
           <input
             type="search"
@@ -136,7 +141,7 @@ const App = () => {
           />
         )}
 
-        {/* Display logic for when in 'browse' or 'cart' view */}
+        {/*logic for when in cart view and more than one item */}
         {(currentView === "browse" ||
           (currentView === "cart" && totalItems > 0)) && (
           <div className="text-white">
@@ -150,7 +155,7 @@ const App = () => {
           </div>
         )}
 
-        {/* "Home" button logic for when in 'checkout' view */}
+        {/* home button */}
         {currentView === "checkout" && (
           <button
             onClick={() => setCurrentView("browse")}
@@ -183,6 +188,7 @@ const App = () => {
               clearCart={() => setCart({})}
               onCheckout={() => setCurrentView("checkout")}
               onGoHome={() => setCurrentView("browse")}
+              handleContinueShopping={handleContinueShopping}
             />
             <button
               onClick={() => setCurrentView("browse")}
