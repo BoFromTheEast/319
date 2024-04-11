@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "script": "^0.1.4"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.3"
