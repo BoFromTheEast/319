@@ -27,14 +27,14 @@ app.get("/listRobots", async (req, res) => {
   res.send(results);
 });
 
-// app.get("/:id", async (req, res) => {
-//   const robotid = Number(req.params.id);
-//   console.log("Robot to find :", robotid);
-//   await client.connect();
-//   console.log("Node connected successfully to GET-id MongoDB");
-//   const query = { id: robotid };
-//   const results = await db.collection("robot").findOne(query);
-//   console.log("Results :", results);
-//   if (!results) res.send("Not Found").status(404);
-//   else res.send(results).status(200);
-// });
+app.get("/:id", async (req, res) => {
+  const robotid = Number(req.params.id);
+  console.log("Robot to find :", robotid);
+  await client.connect();
+  console.log("Node connected successfully to GET-id MongoDB");
+  const query = { id: robotid };
+  const results = await db.collection("robot").findOne(query);
+  console.log("Results :", results);
+  if (!results) res.send("Not Found").status(404);
+  else res.send(results).status(200);
+});
