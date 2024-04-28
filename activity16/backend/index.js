@@ -1,3 +1,7 @@
+// Author: Bo Oo
+// ISU Netid: bhoo@iastate.edu
+// Month: April 27, 2024
+
 const express = require("express");
 const db = require("./db.js");
 const cors = require("cors");
@@ -77,31 +81,36 @@ app.post("/catalog/newProduct", async (req, res) => {
   }
 });
 
-//Update a product
 app.put("/catalog/updateProduct/:id", async (req, res) => {
   try {
-    const id = req.params.id; 
-    const query = "SELECT * FROM fakestore_catalog";
-    const [result] = await db.query(query); // Execute the query and wait for the result
-    console.log("Success in Reading MySQL");
-    res.status(200).send(result); // Send the results as the response
+    const id = req.params.id;
+    const { rating } = req.body;
+    const query = "UPDATE fakestore_catalog SET rating = ? WHERE id = ?";
+    const values = [rating, id];
+    await db.query(query, values);
+    console.log("Product updated successfully");
+    res.status(200).send({ message: "Product updated successfully" });
   } catch (err) {
-    // If an error occurs, catch it and send an appropriate error response
-    console.error("Error in Reading MySQL :", err);
-    res.status(500).send({ error: "An error occurred while fetching items." });
+    console.error("Error updating product:", err);
+    res
+      .status(500)
+      .send({ error: "An error occurred while updating the product" });
   }
 });
 
 //Delete a product
-app.delete("/catalog/deleteProduct", async (req, res) => {
+app.delete("/catalog/deleteProduct/:id", async (req, res) => {
   try {
-    const query = "SELECT * FROM fakestore_catalog";
-    const [result] = await db.query(query); // Execute the query and wait for the result
-    console.log("Success in Reading MySQL");
-    res.status(200).send(result); // Send the results as the response
+    const id = req.params.id;
+    const query = "DELETE FROM fakestore_catalog WHERE id = ?";
+    await db.query(query, [id]);
+
+    console.log("Product deleted successfully");
+    res.status(200).send({ message: "Product deleted successfully" });
   } catch (err) {
-    // If an error occurs, catch it and send an appropriate error response
-    console.error("Error in Reading MySQL :", err);
-    res.status(500).send({ error: "An error occurred while fetching items." });
+    console.error("Error deleting product:", err);
+    res
+      .status(500)
+      .send({ error: "An error occurred while deleting the product" });
   }
 });

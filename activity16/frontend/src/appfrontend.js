@@ -1,3 +1,7 @@
+// Author: Bo Oo
+// ISU Netid: bhoo@iastate.edu
+// Month: April 27, 2024
+
 import { useState, useEffect } from "react";
 
 function App() {
@@ -5,6 +9,9 @@ function App() {
   const [oneProduct, setOneProduct] = useState([]);
   const [inputCategory, setInputCategory] = useState("");
   const [productsByCategory, setProductsByCategory] = useState([]);
+  const [updateProductId, setUpdateProductId] = useState("");
+  const [updateProductRating, setUpdateProductRating] = useState("");
+  const [deleteProductId, setDeleteProductId] = useState("");
 
   // new Product
   const [newProduct, setNewProduct] = useState({
@@ -135,6 +142,64 @@ function App() {
       });
   }
 
+  //function to change product rating
+  function updateProduct(id, newRating) {
+    console.log(id);
+
+    if (id >= 1 && id <= 20) {
+      fetch(`http://127.0.0.1:4000/catalog/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Product to update:", data);
+          setOneProduct(data);
+        })
+        .then(() => {
+          if (!viewer2) setViewer2(true);
+
+          const updatedProduct = {
+            rating: newRating,
+          };
+
+          fetch(`http://127.0.0.1:4000/catalog/updateProduct/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedProduct),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Product rating updated:", data);
+              // Reset form fields or perform any necessary actions after successful update
+            })
+            .catch((error) => {
+              console.error("Error updating product rating:", error);
+            });
+        });
+    } else {
+      console.log("Invalid product ID.");
+    }
+  }
+
+  // fuction to change the product
+  function deleteProduct(id) {
+    if (id) {
+      fetch(`http://127.0.0.1:4000/catalog/deleteProduct/${id}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Product deleted:", data);
+          // Perform any necessary actions after successful deletion
+          setDeleteProductId(""); // Clear the input field
+          getAllProducts(); // Refresh the product list
+        })
+        .catch((error) => {
+          console.error("Error deleting product:", error);
+        });
+    }
+  }
+
   return (
     <div>
       {/* all items */}
@@ -221,7 +286,45 @@ function App() {
         <button onClick={createNewProduct}>Create Product</button>
       </div>
       {/* Update an item by id */}
-      
+      <div>
+        <h3>Update Product Rating</h3>
+        <input
+          type="number"
+          placeholder="Enter product ID"
+          value={updateProductId}
+          onChange={(e) => setUpdateProductId(e.target.value)}
+        />
+        <br />
+        <input
+          type="number"
+          placeholder="Enter new rating"
+          step="0.1"
+          min="0"
+          max="5"
+          value={updateProductRating}
+          onChange={(e) => setUpdateProductRating(e.target.value)}
+        />
+        <br />
+        <button
+          onClick={() => updateProduct(updateProductId, updateProductRating)}
+        >
+          Update Rating
+        </button>
+      </div>
+      {/* delete a product by id*/}
+      <div>
+        <h3>Delete Product</h3>
+        <input
+          type="number"
+          placeholder="Enter product ID"
+          value={deleteProductId}
+          onChange={(e) => setDeleteProductId(e.target.value)}
+        />
+        <br />
+        <button onClick={() => deleteProduct(deleteProductId)}>
+          Delete Product
+        </button>
+      </div>
     </div>
   ); // return end
 } // App end
