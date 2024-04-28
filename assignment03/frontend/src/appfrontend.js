@@ -1,7 +1,12 @@
+// Author: Ponciano Ramirez, Bo Oo
+// ISU Netid : pram1347@iastate.edu, bhoo@iastate.edu
+// Date : April 27th, 2024
 import React, { useState } from "react";
 import ReadProducts from "./ReadProducts";
 import DeleteProducts from "./deleteProduct.js";
 import UpdateProducts from "./updateProducts.js";
+import AddProduct from "./addProduct.js";
+import AboutUs from "./aboutUs.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 
@@ -18,6 +23,12 @@ function App() {
       break;
     case "update":
       componentToRender = <UpdateProducts />;
+      break;
+    case "add":
+      componentToRender = <AddProduct />;
+      break;
+    case "about":
+      componentToRender = <AboutUs />;
       break;
     default:
       componentToRender = <ReadProducts />;
@@ -57,19 +68,36 @@ function App() {
                 <Button
                   variant="primary"
                   className="nav-link btn"
+                  onClick={() => setCurrentView("add")}
+                >
+                  Add Product
+                </Button>
+              </li>
+              <li className="nav-item">
+                <Button
+                  variant="primary"
+                  className="nav-link btn"
                   onClick={() => setCurrentView("delete")}
                 >
                   Delete Product
                 </Button>
               </li>
-              <li>
+              <li className="nav-item">
                 <Button
                   variant="primary"
-                  
                   className="nav-link btn"
                   onClick={() => setCurrentView("update")}
                 >
                   Update Product
+                </Button>
+              </li>
+              <li className="nav-item">
+                <Button
+                  variant="primary"
+                  className="nav-link btn"
+                  onClick={() => setCurrentView("about")}
+                >
+                  About Us
                 </Button>
               </li>
             </ul>

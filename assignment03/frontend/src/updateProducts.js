@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
 
 function UpdateProducts() {
   const [productId, setProductId] = useState("");
@@ -7,16 +8,20 @@ function UpdateProducts() {
 
   useEffect(() => {
     if (productId) {
-      fetch(`http://127.0.0.1:8081/getProduct/${productId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setProduct(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching product:", error);
-        });
+      fetchProductDetails();
     }
   }, [productId]);
+
+  const fetchProductDetails = () => {
+    fetch(`http://127.0.0.1:8081/getProduct/${productId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProduct(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching product:", error);
+      });
+  };
 
   const handleUpdatePrice = () => {
     if (product) {
@@ -34,9 +39,9 @@ function UpdateProducts() {
         .then((response) => response.text())
         .then((data) => {
           console.log(data);
-          // Reset form fields or perform any necessary actions after successful update
-          setProductId("");
-          setProduct(null);
+          // Fetch the updated product details after successful price update
+          fetchProductDetails();
+          // Reset form fields
           setNewPrice("");
         })
         .catch((error) => {
@@ -46,33 +51,49 @@ function UpdateProducts() {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
       <h3>Update Product Price</h3>
       <input
         type="number"
         placeholder="Enter product ID"
         value={productId}
         onChange={(e) => setProductId(e.target.value)}
+        style={{ marginBottom: "10px" }}
       />
-      <br />
       {product && (
-        <div>
+        <div style={{ textAlign: "center" }}>
           <h4>Product Details:</h4>
           <p>ID: {product.id}</p>
           <p>Title: {product.title}</p>
-          <p>Price: {product.price}</p>
           <p>Description: {product.description}</p>
           <p>Category: {product.category}</p>
           <p>
-            Image: {<img src={product.image} width="100" alt={product.title} />}
+            Image:{" "}
+            <img
+              src={product.image}
+              width="100"
+              alt={product.title}
+              style={{ display: "block", margin: "0 auto" }}
+            />
           </p>
           <p>
             Rating: {product.rating?.rate} ({product.rating?.count} reviews)
           </p>
+          <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+            Price: {product.price}
+          </p>
         </div>
       )}
       {product && (
-        <div>
+        <div style={{ textAlign: "center" }}>
           <input
             type="number"
             placeholder="Enter new price"
@@ -80,9 +101,12 @@ function UpdateProducts() {
             min="0"
             value={newPrice}
             onChange={(e) => setNewPrice(e.target.value)}
+            style={{ marginBottom: "10px" }}
           />
           <br />
-          <button onClick={handleUpdatePrice}>Update Price</button>
+          <Button variant="danger" onClick={handleUpdatePrice}>
+            Update Price
+          </Button>
         </div>
       )}
     </div>

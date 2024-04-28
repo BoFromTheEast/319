@@ -1,5 +1,5 @@
-// Author: Ponciano Ramirez
-// ISU Netid : pram1347@iastate.edu
+// Author: Ponciano Ramirez, Bo Oo
+// ISU Netid : pram1347@iastate.edu, bhoo@iastate.edu
 // Date :  April 27th, 2024
 var express = require("express");
 var cors = require("cors");
@@ -37,15 +37,15 @@ app.post("/addProduct", async (req, res) => {
     const values = Object.values(req.body);
     const newDocument = {
       id: req.body.id,
-      Title: req.body.title,
-      Price: req.body.price,
-      Description: req.body.description,
-      Category: req.body.category,
-      Image: req.body.image,
-      Rating: {
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description,
+      category: req.body.category,
+      image: req.body.image,
+      rating: {
         // Include the Rating as an object
-        Rate: req.body.rating.rate,
-        Count: req.body.rating.count,
+        rate: req.body.rating.rate,
+        count: req.body.rating.count,
       },
     };
     const results = await db
