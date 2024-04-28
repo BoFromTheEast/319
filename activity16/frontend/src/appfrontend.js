@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 function App() {
   const [product, setProduct] = useState([]);
   const [oneProduct, setOneProduct] = useState([]);
+  const [inputCategory, setInputCategory] = useState("");
+  const [productsByCategory, setProductsByCategory] = useState([]);
+
   // new Product
   const [addNewProduct, setAddNewProduct] = useState({
     id: 0,
@@ -16,10 +19,12 @@ function App() {
 
   const [viewer1, setViewer1] = useState(false);
   const [viewer2, setViewer2] = useState(false);
+  const [viewer3, setViewer3] = useState(false);
 
   useEffect(() => {
     getAllProducts();
   }, []);
+  //function to show all item
   function getAllProducts() {
     fetch("http://127.0.0.1:4000/catalog")
       .then((response) => response.json())
@@ -30,6 +35,7 @@ function App() {
       });
     setViewer1(!viewer1);
   }
+  //shwoing all item mapping
   const showAllItems = product.map((el) => (
     <div key={el.id}>
       <img src={el.image} width={30} alt="images" /> <br />
@@ -39,6 +45,7 @@ function App() {
       Rating :{el.rating} <br />
     </div>
   ));
+  // get one product function
   function getOneProduct(id) {
     console.log(id);
     if (id >= 1 && id <= 20) {
@@ -54,6 +61,7 @@ function App() {
       console.log("Wrong number of Product id.");
     }
   }
+  //maping to show one item
   const showOneItem = oneProduct.map((el) => (
     <div key={el.id}>
       <img src={el.image} width={30} alt="images" /> <br />
@@ -63,24 +71,67 @@ function App() {
       Rating: {el.rating} <br />
     </div>
   ));
+
+  //show item by category
+  function getProductsByCategory(category) {
+    if (category) {
+      fetch(`http://127.0.0.1:4000/catalog/category?category=${category}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Products fetched by category:", category, data);
+          setProductsByCategory(data);
+          setViewer3(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching products by category:", error);
+          setViewer3(false);
+        });
+    }
+  }
+
+  //map the product
+  const showCategoryItem = productsByCategory.map((el) => (
+    <div key={el.id}>
+      <img src={el.image} width={30} alt="images" /> <br />
+      Title: {el.title} <br />
+      Category: {el.category} <br />
+      Price: {el.price} <br />
+      Rating: {el.rating} <br />
+    </div>
+  ));
+
   return (
     <div>
+      {/* all items */}
       <h1>Catalog of Products</h1>
       <div>
         <h3>Show all available Products.</h3>
-        <button onClick={() => getAllProducts()}>Show All ...</button>
+        <button onClick={getAllProducts}>Show All...</button>
         {viewer1 && showAllItems}
       </div>
+      {/* individual item */}
       <div>
         <h3>Show one Product by Id:</h3>
         <input
           type="text"
-          id="message"
-          name="message"
           placeholder="id"
           onChange={(e) => getOneProduct(e.target.value)}
         />
         {viewer2 && showOneItem}
+      </div>
+      {/* category item */}
+      <div>
+        <h3>Filter Products by Category</h3>
+        <input
+          type="text"
+          placeholder="Enter category"
+          value={inputCategory}
+          onChange={(e) => setInputCategory(e.target.value)}
+        />
+        <button onClick={() => getProductsByCategory(inputCategory)}>
+          Filter by Category
+        </button>
+        {viewer3 && showCategoryItem}
       </div>
     </div>
   ); // return end

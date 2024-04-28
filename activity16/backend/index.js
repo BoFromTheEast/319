@@ -39,3 +39,22 @@ app.get("/catalog/:id", async (req, res) => {
     res.status(500).send({ error: "An error occurred while fetching items." });
   }
 });
+
+app.get("/catalog/category", async (req, res) => {
+  try {
+    const category = req.query.category;
+    if (!category) {
+      return res.status(400).send({ error: "Category parameter is required." });
+    }
+
+    const query = "SELECT * FROM fakestore_catalog WHERE category = ?";
+    const [result] = await db.query(query, [category]);
+    console.log("Success in Reading MySQL with category:", category);
+    res.status(200).send(result);
+  } catch (err) {
+    console.error("Error in Reading MySQL with category:", category, err);
+    res.status(500).send({
+      error: "An error occurred while fetching items for the category.",
+    });
+  }
+});
