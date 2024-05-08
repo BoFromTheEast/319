@@ -1,44 +1,85 @@
-import React, { useState } from 'react';
-import pokemon from './pokemon.png';
+import React, { useState } from "react";
+import pokemon from "./pokemon.png";
 // import TeamList from "./teamList";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // const handleLogin = async (event) => {
+  //   event.preventDefault(); // Prevent the form from submitting in the traditional way
+  //   const loginDetails = {
+  //     loginName: email,
+  //     password: password,
+  //   };
+
+  //   try {
+  //     const response = await fetch("http://localhost:8081/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(loginDetails),
+  //     });
+
+  //     if (response.ok) {
+  //       // const data = await response.json();
+  //       // localStorage.setItem("userToken", data.token);
+  //       navigate("/PokemonStats");
+  //     } else {
+  //       const errorText = await response.text();
+  //       setErrorMessage(errorText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Login request failed:", error);
+  //     setErrorMessage("Login request failed, please check your network.");
+  //   }
+  // };
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // Prevent the form from submitting in the traditional way
+    event.preventDefault();
     const loginDetails = {
       loginName: email,
       password: password,
     };
 
     try {
-      const response = await fetch('http://localhost:8081/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8081/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(loginDetails),
       });
 
-      const message = await response.text(); // Assuming response is plain text
       if (response.ok) {
-        navigate('/TeamList'); // Navigate to TeamList if login is successful
+        try {
+          const data = await response.json(); // Attempt to parse JSON
+          localStorage.setItem("userToken", data.token); // Try to store the token
+          localStorage.setItem("loginName", loginDetails.loginName);
+
+          navigate("/PokemonStats");
+        } catch (parseError) {
+          console.error("Error parsing JSON:", parseError);
+          setErrorMessage("Failed to parse server response");
+        }
       } else {
-        setErrorMessage(message); // Set the error message state if login fails
+        const errorText = await response.text(); // Read response as text
+        console.error("Server responded with error:", errorText);
+        setErrorMessage(errorText);
       }
-    } catch (error) {
-      console.error('Login request failed:', error);
-      setErrorMessage('Login request failed, please check your network.'); // Set a generic error message
+    } catch (networkError) {
+      console.error("Login request failed:", networkError);
+      setErrorMessage("Login request failed, please check your network.");
     }
   };
-  // const handleSignUp = () => {
-  //   navigate(SignUp);
-  // }
+
+  const handleSignUp = () => {
+    navigate("/SignUp");
+  };
 
   return (
     <div className="flex justify-center mt-12">
@@ -90,8 +131,10 @@ function LoginPage() {
 
         {/* Signup */}
         <div className="space-y-4 mt-40">
-          {/* onClick={hangleSignUp} */}
-          <button className="w-full bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 rounded-md">
+          <button
+            onClick={handleSignUp}
+            className="w-full bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 rounded-md"
+          >
             Signup
           </button>
         </div>

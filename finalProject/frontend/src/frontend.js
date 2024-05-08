@@ -14,6 +14,8 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/" element={<TeamList />} />
         <Route path="/" element={<PokemonStats />} />
+        <Route path="/" element={<SignUp />} />
+        <Route path="/loginpage" element={<LoginPage />} />
         <Route path="/pokemonstats" element={<PokemonStats />} />
         <Route path="/teamlist" element={<TeamList />} />
         <Route path="/pokemoninfopage" element={<PokemonInfoPage />} />

@@ -35,13 +35,14 @@ function SignUp() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: formData.name,
           loginName: formData.email, // Assuming your backend expects loginName instead of email
           password: formData.password,
         }),
       });
 
       if (response.ok) {
-        navigate("/PokemonStats"); // Navigate on successful sign up
+        navigate("/LoginPage"); // Navigate on successful sign up
       } else {
         const text = await response.text();
         alert(`Failed to sign up: ${text}`);

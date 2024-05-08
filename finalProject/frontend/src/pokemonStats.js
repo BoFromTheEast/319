@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import LeftButton from "./leftButton.png";
 import RightButton from "./rightButton.png";
 import setting from "./setting.png";
-
+import axios from "axios"; // Make sure to import axios here
 
 function PokemonStats() {
   const navigate = useNavigate();
+  const [pokemonTeam, setPokemonTeam] = useState([]);
+  const [currentPokemonIndex, setCurrentPokemonIndex] = useState(0);
 
   useEffect(() => {
     document.body.style.backgroundColor = "grey"; // Set background when component mounts
@@ -16,6 +18,43 @@ function PokemonStats() {
       document.body.style.backgroundColor = ""; // Revert on unmount if necessary
     };
   }, []);
+
+  useEffect(() => {
+    async function fetchPokemon() {
+      const token = localStorage.getItem("userToken");
+      const loginName = localStorage.getItem("loginName");
+      if (!token || !loginName) {
+        alert("Please log in again.");
+        return navigate("/login");
+      }
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/user/${loginName}/pokemon`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setPokemonTeam(response.data.pokemonTeam);
+      } catch (error) {
+        console.error("Failed to fetch Pokémon:", error);
+      }
+    }
+
+    fetchPokemon();
+  }, [navigate]);
+
+  const handleNavigatePokemon = (direction) => {
+    setCurrentPokemonIndex((prev) =>
+      direction === "left"
+        ? prev > 0
+          ? prev - 1
+          : pokemonTeam.length - 1
+        : (prev + 1) % pokemonTeam.length
+    );
+  };
+
+  const currentPokemon = pokemonTeam[currentPokemonIndex];
 
   const goBack = () => {
     navigate(-1); // Navigates back
@@ -50,19 +89,20 @@ function PokemonStats() {
       <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
         {/* Pokemon Image and stats Placeholder */}
         <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
-          Placeholder for Pokemon's image from MongoDB
+          {/* Placeholder for Pokemon's image from MongoDB */}
+          {currentPokemon.name};
         </div>
         {/* Buttons */}
         <div className="flex justify-between w-full px-4 mt-4">
           {/* Button to another pokemon, left button*/}
           <button
-            // onClick={() => handleNavigatePokemon("left")}
+            onClick={() => handleNavigatePokemon("left")}
             className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
           >
             <img src={LeftButton} alt="Left" className="h-8 w-8" />
           </button>
           <button
-            // onClick={() => handleNavigatePokemon("right")}
+            onClick={() => handleNavigatePokemon("right")}
             className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
           >
             <img src={RightButton} alt="Right" className="h-8 w-8" />
@@ -75,7 +115,11 @@ function PokemonStats() {
         <div className="p-5">
           <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
             {/* <img src=""></img> */}
-            <div className="flex-1 text-center">Stats</div>
+            <div className="flex-1 text-center">
+              <div></div>
+              <div></div>
+              Stats
+            </div>
           </div>
         </div>
       </div>

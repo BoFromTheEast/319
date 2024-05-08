@@ -24,32 +24,69 @@ function Setting() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault(); // Prevent default form submission behavior
+  //   const loginName = "Testing@gmail.com"; // This should be dynamically obtained, perhaps from user state or props
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:8081/users/${loginName}/password`,
+  //       {
+  //         method: "PUT", // Correct method for updating
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           newPassword: formData.password,
+  //         }),
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       navigate("/PokemonStats"); // Navigate on successful update
+  //     } else {
+  //       const text = await response.text();
+  //       alert(`Failed to change password: ${text}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Change password error:", error);
+  //     alert("Failed to change password, please try again later.");
+  //   }
+  // };
+
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-    const loginName = "exampleUser"; // This should be dynamically obtained, perhaps from user state or props
+    const token = localStorage.getItem("userToken"); // Retrieve the token
+    if (!token) {
+      console.error("No token found, please log in.");
+      alert("No token found, please log in.");
+      return;
+    }
+
+    const loginName = localStorage.getItem("loginName");
+    if (!loginName) {
+      console.error("Login name not found, please log in again.");
+      alert("Login name not found, please log in again.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:8081/user/${loginName}/password`,
         {
-          method: "PUT", // Correct method for updating
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Use token in Authorization header
           },
-          body: JSON.stringify({
-            newPassword: formData.password,
-          }),
+          body: JSON.stringify({ newPassword: formData.password }),
         }
       );
 
-      if (response.ok) {
-        navigate("/PokemonStats"); // Navigate on successful update
-      } else {
-        const text = await response.text();
-        alert(`Failed to change password: ${text}`);
-      }
+      if (!response.ok) throw new Error("Password change failed.");
+      alert("Password changed successfully!");
     } catch (error) {
-      console.error("Change password error:", error);
-      alert("Failed to change password, please try again later.");
+      console.error("Failed to change password:", error);
+      alert(error.message);
     }
   };
 
