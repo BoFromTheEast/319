@@ -61,7 +61,7 @@ function SignUp() {
         Back
       </button>
       <div className="w-full max-w-xs">
-        <div className="bg-sky-500 text-white font-bold p-10 rounded-lg shadow-lg text-center">
+        <div className="bg-sky-500 text-white font-bold p-5 rounded-lg shadow-lg text-center">
           Welcome to Pokemon TeamBuilder !!
         </div>
         <img src={pokemon} alt="Pokemon" className="mx-auto my-4" />
