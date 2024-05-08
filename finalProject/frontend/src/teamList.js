@@ -31,6 +31,13 @@ function TeamList() {
       .catch((error) => console.error('Error fetching pokemons:', error));
   }, []);
 
+  const fetchPokemonNames = () => {
+    fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
+      .then((response) => response.json())
+      .then((data) => setPokemonData(data))
+      .catch((error) => console.error('Error fetching pokemons:', error));
+  };
+
   useEffect(() => {
     document.body.style.backgroundColor = 'pink'; // Set background when component mounts
 
@@ -42,6 +49,30 @@ function TeamList() {
       document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
+
+  const handleAddPokemon = async (name) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8081/user/pram1347@iastate.edu/pokemon`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name }), // Send the Pokémon name in the request body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to add Pokémon');
+      }
+
+      // Reload the list of Pokémon names after adding a new Pokémon
+      fetchPokemonNames();
+    } catch (error) {
+      console.error('Error adding Pokémon:', error);
+    }
+  };
 
   useEffect(() => {
     if (searchTerm) {
@@ -129,7 +160,10 @@ function TeamList() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg">
+          <button
+            onClick={() => handleAddPokemon(searchTerm)}
+            className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+          >
             +
           </button>
         </div>
