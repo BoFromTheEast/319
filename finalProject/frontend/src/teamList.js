@@ -103,6 +103,26 @@ function TeamList() {
               -
             </button>
           </div>
+          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
+            {/* <img src=""></img> */}
+            <span className="flex-1 text-center">Pokemon 5</span>
+            <button
+              // onClick = ""
+              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+            >
+              -
+            </button>
+          </div>
+          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
+            {/* <img src=""></img> */}
+            <span className="flex-1 text-center">Pokemon 6</span>
+            <button
+              // onClick = ""
+              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+            >
+              -
+            </button>
+          </div>
         </div>
       </div>
     </div>

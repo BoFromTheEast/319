@@ -31,7 +31,7 @@ function PokemonInfoPage() {
       </button>
 
       {/* Pokemon Title */}
-      <div className="w-full md:w-1/2 lg:w-1/2">
+      {/* <div className="w-full md:w-1/2 lg:w-1/2">
         <div className="bg-red-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
           <span className="flex-1 text-center">
             Place holder for Pokemon title
@@ -43,15 +43,15 @@ function PokemonInfoPage() {
             +
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Pokemon Image and stats Placeholder */}
       <div className="w-full md:w-1/2 lg:w-1/5 mt-5">
         <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg text-center">
           Placeholder for Pokemon's image from MongoDB
-          <div className="mt-3 focus:outline-black">
+          {/* <div className="mt-3 focus:outline-black">
             placeholder for pokemon's stats
-          </div>
+          </div> */}
         </div>
       </div>
 

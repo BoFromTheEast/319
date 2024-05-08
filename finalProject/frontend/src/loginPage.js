@@ -7,7 +7,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate("/TeamList");
+    navigate("/PokemonStats");
   };
 
   // const handleSignUp = () => {
