@@ -3,6 +3,8 @@ var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const axios = require('axios'); // Ensure axios is installed and imported
+
 const Schema = mongoose.Schema; // Extract Schema from mongoose
 
 app.use(cors());
@@ -17,12 +19,29 @@ const dbName = 'FinalProject'; // Specify your database name here
 
 // Define a simple User schema as an example
 const moveSchema = new Schema({ name: String });
-
+// Define the schema for Pokémon stats
+const statsSchema = new Schema({
+  health: { type: Number, required: true },
+  attack: { type: Number, required: true },
+  defense: { type: Number, required: true },
+  specialAttack: Number,
+  specialDefense: Number,
+  speed: Number,
+});
+// const pokemonSchema = new Schema({
+//   name: { type: String, required: true },
+//   type: { type: String, required: true },
+//   stats: statsSchema, // Embed the stats schema
+//   moves: [moveSchema], // Moves currently known
+//   possibleMoves: [moveSchema], // Moves that can be learned
+// });
 const pokemonSchema = new Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true },
-  moves: [moveSchema],
-  //add possible moves here
+  type: [{ type: String, required: true }], // Define type as an array of strings
+  stats: statsSchema,
+  moves: [{ type: String, required: true }], // Define moves as an array of strings
+  possibleMoves: [{ type: String, required: true }], // Define possibleMoves as an array of strings
+  dreamWorldImageUrl: { type: String, required: true }, // New field for dream_world front default image URL
 });
 
 const userSchema = new Schema({
@@ -44,19 +63,26 @@ const User = mongoose.model('User', userSchema);
 // Endpoint to get a user's Pokémon team
 app.get('/user/:loginName/pokemon', async (req, res) => {
   try {
-    // const user = await User.findOne({ loginName: req.params.loginName });
-    const user = await User.findOne({ loginName: 'AshKetchum' });
-
-    console.log('Received loginName:', req.params.loginName); // Log the input
+    const user = await User.findOne({ loginName: req.params.loginName });
 
     if (!user) {
       return res.status(404).send('User not found');
     }
+
     const pokemonTeam = user.pokemonTeam.map((pokemon) => {
       return {
         name: pokemon.name,
         type: pokemon.type,
-        moves: pokemon.moves.map((move) => move.name),
+        stats: {
+          health: pokemon.stats.health,
+          attack: pokemon.stats.attack,
+          defense: pokemon.stats.defense,
+          specialAttack: pokemon.stats.specialAttack,
+          specialDefense: pokemon.stats.specialDefense,
+          speed: pokemon.stats.speed,
+        },
+        moves: pokemon.moves.map((move) => move.name), // Current moves
+        possibleMoves: pokemon.possibleMoves.map((move) => move.name), // Possible moves to learn
       };
     });
 
@@ -73,7 +99,75 @@ app.get('/user/:loginName/pokemon', async (req, res) => {
 //create user
 
 // Endpoint to create a new user
-// Endpoint to create a new user
+// Endpoint to create a new Pokémon for a user
+app.post('/user/:loginName/pokemon', async (req, res) => {
+  const { loginName } = req.params;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).send('Pokémon name is required');
+  }
+
+  try {
+    // Fetch Pokémon details from PokéAPI
+    const pokeApiResponse = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+    );
+
+    const { stats, moves, types, sprites } = pokeApiResponse.data; // Extracting types and sprites from PokéAPI response
+
+    // Prepare stats
+    const pokemonStats = {
+      health: stats.find((stat) => stat.stat.name === 'hp')?.base_stat,
+      attack: stats.find((stat) => stat.stat.name === 'attack')?.base_stat,
+      defense: stats.find((stat) => stat.stat.name === 'defense')?.base_stat,
+      specialAttack: stats.find((stat) => stat.stat.name === 'special-attack')
+        ?.base_stat,
+      specialDefense: stats.find((stat) => stat.stat.name === 'special-defense')
+        ?.base_stat,
+      speed: stats.find((stat) => stat.stat.name === 'speed')?.base_stat,
+    };
+
+    // Prepare possible moves
+    const pokemonMoves = moves.map((move) => move.move.name);
+
+    // Prepare types
+    const pokemonTypes = types.map((type) => type.type.name);
+
+    // Extract dream_world front default image URL
+    // Extract dream_world front default image URL if it exists, otherwise provide a default value
+    const imageUrl = sprites.other['dream_world']
+      ? sprites.other['dream_world'].front_default
+      : 'default_image_url_here';
+
+    // Find the user by login name
+    const user = await User.findOne({ loginName });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Add the new Pokémon to the user's team
+    user.pokemonTeam.push({
+      name,
+      type: pokemonTypes,
+      stats: pokemonStats,
+      moves: [],
+      possibleMoves: pokemonMoves,
+      dreamWorldImageUrl: imageUrl, // Include dream_world front default image URL
+    });
+
+    // Save the updated user document
+    await user.save();
+
+    // Respond with success message
+    res.status(200).send('Pokémon added successfully');
+  } catch (error) {
+    console.error('Error adding Pokémon:', error);
+    res.status(500).send('Failed to add Pokémon');
+  }
+});
+
 app.post('/signup', async (req, res) => {
   const { loginName, password } = req.body;
 
@@ -97,41 +191,6 @@ app.post('/signup', async (req, res) => {
   } catch (error) {
     console.error('Error creating new user:', error);
     res.status(500).send('Error creating new user');
-  }
-});
-
-// Endpoint to add a Pokémon to a user's team
-app.post('/user/:loginName/pokemon', async (req, res) => {
-  const { loginName } = req.params;
-  const { name, type } = req.body;
-
-  if (!name || !type) {
-    return res.status(400).send('Pokémon name and type are required');
-  }
-
-  try {
-    // Find the user by login name and update their Pokémon team
-    const user = await User.findOne({ loginName: loginName });
-
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-
-    // Add the new Pokémon to the user's team
-    user.pokemonTeam.push({
-      name: name,
-      type: type,
-      moves: [], // No moves specified
-    });
-
-    // Save the updated user document
-    await user.save();
-
-    // Respond with success message
-    res.status(200).send('Pokémon added successfully');
-  } catch (error) {
-    console.error('Error adding Pokémon:', error);
-    res.status(500).send('Failed to add Pokémon');
   }
 });
 
