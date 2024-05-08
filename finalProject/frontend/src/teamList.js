@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import setting from "./setting.png";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import setting from './setting.png';
 
 // This component will present a page where the page will read the pokemons
 // and show the pokemon's data such as health and stat as well as a png
@@ -9,20 +9,37 @@ import setting from "./setting.png";
 
 function TeamList() {
   const navigate = useNavigate();
+  // const [pokemonNames, setPokemonNames] = useState([]);
+
+  const [pokemonData, setPokemonData] = useState([]);
 
   const [pokemons, setPokemons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
-  useEffect(() => {
-    document.body.style.backgroundColor = "pink"; // Set background when component mounts
+  // useEffect(() => {
+  //   fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
+  //     .then((response) => response.json())
+  //     .then((data) => setPokemonNames(data))
+  //     .catch((error) => console.error('Error fetching pokemons:', error));
+  // }, []);
 
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=150")
+  useEffect(() => {
+    fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
+      .then((response) => response.json())
+      .then((data) => setPokemonData(data))
+      .catch((error) => console.error('Error fetching pokemons:', error));
+  }, []);
+
+  useEffect(() => {
+    document.body.style.backgroundColor = 'pink'; // Set background when component mounts
+
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
       .then((response) => response.json())
       .then((data) => setPokemons(data.results));
 
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 
@@ -43,7 +60,7 @@ function TeamList() {
   };
 
   const handlePokemonInfo = () => {
-    navigate("/PokemonInfoPage");
+    navigate('/PokemonInfoPage');
   };
 
   const handlePokemonSelect = (name) => {
@@ -52,7 +69,46 @@ function TeamList() {
   };
 
   const handleSetting = () => {
-    navigate("/Setting");
+    navigate('/Setting');
+  };
+
+  // const handleDeletePokemon = (name) => {
+  //   fetch(`http://localhost:8081/user/pram1347@iastate.edu/pokemon/${name}`, {
+  //     method: 'DELETE',
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         // If deletion is successful, update the list of pokemonNames
+  //         setPokemonNames((prevPokemonNames) =>
+  //           prevPokemonNames.filter((pokemon) => pokemon !== name)
+  //         );
+  //       } else {
+  //         console.error('Failed to delete Pokémon');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error deleting Pokémon:', error);
+  //     });
+  // };
+
+  const handleDeletePokemon = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8081/user/pram1347@iastate.edu/pokemon/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete Pokémon');
+      }
+
+      // Remove the deleted Pokémon from the state
+      setPokemonData(pokemonData.filter((pokemon) => pokemon.id !== id));
+    } catch (error) {
+      console.error('Error deleting Pokémon:', error);
+    }
   };
 
   return (
@@ -69,7 +125,7 @@ function TeamList() {
             type="text"
             placeholder="Search Pokemon"
             className="flex-1 text-black"
-            style={{ padding: "8px", fontSize: "16px" }}
+            style={{ padding: '8px', fontSize: '16px' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -93,80 +149,35 @@ function TeamList() {
       </div>
 
       {/* Pokemon Image Placeholder */}
-      <div className="w-full md:w-1/2 lg:w-1/5 mt-10">
-        <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg text-center">
-          Placeholder for Pokemon's image from MongoDB
-        </div>
-      </div>
-
-      {/* Pokemon Bag */}
       <div className="w-full md:w-1/2 lg:w-1/2 mt-10 bg-sky-400 rounded-lg shadow-lg">
         <div className="p-5">
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <button onClick={handlePokemonInfo} className="flex-1 text-center">
-              Pokemon 1
-            </button>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+          {pokemonData.map((pokemon) => (
+            <div
+              key={pokemon.id}
+              className="mt-2 bg-green-500 text-white font-bold p-4 rounded-lg shadow-lg flex justify-between items-center"
             >
-              -
-            </button>
-          </div>
-
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon 2</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon 3</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon 4</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon 5</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon 6</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
+              {/* Button to the left */}
+              <button
+                // onClick = ""
+                className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+              >
+                +
+              </button>
+              {/* name of pokemon */}
+              <span className="flex-1 text-center">{pokemon.name}</span>
+              {/* Button to the right */}
+              <button
+                onClick={() => handleDeletePokemon(pokemon.id)}
+                className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
+              >
+                -
+              </button>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Setting B*/}
       <div className="space-y-4 mt-10 flex justify-center items-center">
         <button
           onClick={handleSetting}
