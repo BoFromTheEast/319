@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import setting from "./setting.png";
+
 
 function PokemonInfoPage() {
   const navigate = useNavigate();
@@ -14,6 +16,9 @@ function PokemonInfoPage() {
 
   const goBack = () => {
     navigate(-1); // Navigates back
+  };
+  const handleSetting = () => {
+    navigate("/Setting");
   };
 
   //   const handlePokemonInfo = () => {
@@ -109,6 +114,14 @@ function PokemonInfoPage() {
             </button>
           </div>
         </div>
+      </div>
+      <div className="space-y-4 mt-10 flex justify-center items-center">
+        <button
+          onClick={handleSetting}
+          className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+        >
+          <img src={setting} alt="setting" className="h-8 w-8" />
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import setting from "./setting.png";
 
 // This component will present a page where the page will read the pokemons
 // and show the pokemon's data such as health and stat as well as a png
@@ -10,18 +11,18 @@ function TeamList() {
   const navigate = useNavigate();
 
   const [pokemons, setPokemons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'pink'; // Set background when component mounts
+    document.body.style.backgroundColor = "pink"; // Set background when component mounts
 
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=150")
       .then((response) => response.json())
       .then((data) => setPokemons(data.results));
 
     return () => {
-      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
     };
   }, []);
 
@@ -42,12 +43,16 @@ function TeamList() {
   };
 
   const handlePokemonInfo = () => {
-    navigate('/PokemonInfoPage');
+    navigate("/PokemonInfoPage");
   };
 
   const handlePokemonSelect = (name) => {
     setSearchTerm(name); // Set the search term to the selected Pokémon's name
     setFilteredPokemons([]); // Optionally clear the dropdown after selection
+  };
+
+  const handleSetting = () => {
+    navigate("/Setting");
   };
 
   return (
@@ -64,7 +69,7 @@ function TeamList() {
             type="text"
             placeholder="Search Pokemon"
             className="flex-1 text-black"
-            style={{ padding: '8px', fontSize: '16px' }}
+            style={{ padding: "8px", fontSize: "16px" }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -161,6 +166,14 @@ function TeamList() {
             </button>
           </div>
         </div>
+      </div>
+      <div className="space-y-4 mt-10 flex justify-center items-center">
+        <button
+          onClick={handleSetting}
+          className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+        >
+          <img src={setting} alt="setting" className="h-8 w-8" />
+        </button>
       </div>
     </div>
   );

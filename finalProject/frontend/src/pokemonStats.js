@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 // left and right button
 import LeftButton from "./leftButton.png";
 import RightButton from "./rightButton.png";
+import setting from "./setting.png";
+
 
 function PokemonStats() {
   const navigate = useNavigate();
@@ -21,6 +23,9 @@ function PokemonStats() {
 
   const handleAddPokemon = () => {
     navigate("/TeamList");
+  };
+  const handleSetting = () => {
+    navigate("/Setting");
   };
 
   return (
@@ -73,6 +78,14 @@ function PokemonStats() {
             <div className="flex-1 text-center">Stats</div>
           </div>
         </div>
+      </div>
+      <div className="space-y-4 mt-10 flex justify-center items-center">
+        <button
+          onClick={handleSetting}
+          className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+        >
+          <img src={setting} alt="setting" className="h-8 w-8" />
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import pokemon from "./pokemon.png";
+// import setting from "./setting.png";
 // import TeamList from "./teamList";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +15,10 @@ function LoginPage() {
     navigate("/SignUp");
   };
 
+  // const handleSetting = () => {
+  //   navigate("/Setting");
+  // };
+
   return (
     <div className="flex justify-center mt-12">
       {/* Adjusted margin for overall vertical alignment */}
@@ -27,7 +32,7 @@ function LoginPage() {
         {/* Corrected image tag */}
         <div className="space-y-4 mt-8">
           {/* This is input boxes */}
-          
+
           <form>
             <label className="block">
               <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
@@ -68,6 +73,7 @@ function LoginPage() {
             Signup
           </button>
         </div>
+        
       </div>
     </div>
   );

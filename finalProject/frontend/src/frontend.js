@@ -5,6 +5,7 @@ import TeamList from "./teamList";
 import PokemonInfoPage from "./pokemonInfoPage";
 import PokemonStats from "./pokemonStats";
 import SignUp from "./signUp";
+import Setting from "./setting.js";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/teamlist" element={<TeamList />} />
         <Route path="/pokemoninfopage" element={<PokemonInfoPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/setting" element={<Setting />} />
       </Routes>
     </div>
   );
