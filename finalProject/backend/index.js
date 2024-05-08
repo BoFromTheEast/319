@@ -22,6 +22,7 @@ const pokemonSchema = new Schema({
   name: { type: String, required: true },
   type: { type: String, required: true },
   moves: [moveSchema],
+  //add possible moves here
 });
 
 const userSchema = new Schema({
