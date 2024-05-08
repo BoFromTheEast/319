@@ -90,7 +90,7 @@ function PokemonStats() {
         {/* Pokemon Image and stats Placeholder */}
         <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
           {/* Placeholder for Pokemon's image from MongoDB */}
-          {currentPokemon.name};
+          {/* {currentPokemon.name}; */}
         </div>
         {/* Buttons */}
         <div className="flex justify-between w-full px-4 mt-4">
