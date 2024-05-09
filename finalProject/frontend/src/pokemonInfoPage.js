@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import setting from './setting.png';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import setting from "./setting.png";
 
 function PokemonInfoPage(props) {
   // const { id } = useParams();
   const { id } = props;
-  console.log('Pokemon ID:', id);
+  console.log("Pokemon ID:", id);
 
   const [pokemonMoves, setPokemonMoves] = useState([]);
   const [moves, setMoves] = useState([]);
-  const [moveSearchTerm, setMoveSearchTerm] = useState('');
+  const [moveSearchTerm, setMoveSearchTerm] = useState("");
   const [filteredMoves, setFilteredMoves] = useState([]);
   //fetch all moves that a pokemon can learn
   useEffect(() => {
-    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
-    const userEmail = localStorage.getItem('loginName');
+    document.body.style.backgroundColor = "orange"; // Set background when component mounts
+    const userEmail = localStorage.getItem("loginName");
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
       .then((response) => response.json())
       .then((data) => {
         setMoves(data);
         console.log(data); // Log the updated moves
       })
-      .catch((error) => console.error('Error fetching moves:', error));
+      .catch((error) => console.error("Error fetching moves:", error));
   }, [id]);
   //////////
   useEffect(() => {
@@ -32,11 +32,11 @@ function PokemonInfoPage(props) {
   }, [moveSearchTerm, moves]);
   //////
   useEffect(() => {
-    const userEmail = localStorage.getItem('loginName');
+    const userEmail = localStorage.getItem("loginName");
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch moves');
+          throw new Error("Failed to fetch moves");
         }
         return response.json();
       })
@@ -45,17 +45,17 @@ function PokemonInfoPage(props) {
         setPokemonMoves(data);
       })
       .catch((error) => {
-        console.error('Error fetching moves:', error);
+        console.error("Error fetching moves:", error);
       });
   }, [id]);
 
   ///////
   const fetchMoves = () => {
-    const userEmail = localStorage.getItem('loginName');
+    const userEmail = localStorage.getItem("loginName");
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch moves');
+          throw new Error("Failed to fetch moves");
         }
         return response.json();
       })
@@ -64,15 +64,15 @@ function PokemonInfoPage(props) {
         setPokemonMoves(data);
       })
       .catch((error) => {
-        console.error('Error fetching moves:', error);
+        console.error("Error fetching moves:", error);
       });
   };
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
+    document.body.style.backgroundColor = "orange"; // Set background when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
     };
   }, []);
 
@@ -84,51 +84,51 @@ function PokemonInfoPage(props) {
   };
   // Handle adding a move
   const handleAddMove = async (moveName) => {
-    const userEmail = localStorage.getItem('loginName');
+    const userEmail = localStorage.getItem("loginName");
     const pokemonId = id; // Assuming you have access to the Pokémon ID
 
     try {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon/${pokemonId}/move`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ name: moveName }), // Send the move name as 'name' attribute
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to add move');
+        throw new Error("Failed to add move");
       }
 
       // Reload the list of moves after adding a new move
       fetchMoves();
     } catch (error) {
-      console.error('Error adding move:', error);
+      console.error("Error adding move:", error);
     }
   };
 
   const handleDeleteMove = async (moveId) => {
-    const userEmail = localStorage.getItem('loginName');
+    const userEmail = localStorage.getItem("loginName");
     const pokemonId = id;
     try {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon/${pokemonId}/move/${moveId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to delete move');
+        throw new Error("Failed to delete move");
       }
 
       // Refresh the moves list after deleting a move
       fetchMoves();
     } catch (error) {
-      console.error('Error deleting move:', error);
+      console.error("Error deleting move:", error);
     }
   };
 
@@ -161,7 +161,7 @@ function PokemonInfoPage(props) {
             type="text"
             placeholder="Search Move"
             className="flex-1 text-black rounded-lg"
-            style={{ padding: '8px', fontSize: '16px' }}
+            style={{ padding: "8px", fontSize: "16px" }}
             value={moveSearchTerm}
             onChange={(e) => setMoveSearchTerm(e.target.value)}
           />
