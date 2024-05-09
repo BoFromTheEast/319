@@ -3,13 +3,72 @@ import { useParams } from "react-router-dom";
 import setting from "./setting.png";
 
 function PokemonInfoPage(props) {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = props;
+  console.log("Pokemon ID:", id);
+
   const [pokemonMoves, setPokemonMoves] = useState([]);
   const [moves, setMoves] = useState([]);
   const [moveSearchTerm, setMoveSearchTerm] = useState("");
   const [filteredMoves, setFilteredMoves] = useState([]);
   //fetch all moves that a pokemon can learn
   useEffect(() => {
+    const userEmail = localStorage.getItem("loginName");
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMoves(data);
+        console.log(data); // Log the updated moves
+      })
+      .catch((error) => console.error("Error fetching moves:", error));
+  }, [id]);
+  //////////
+  useEffect(() => {
+    const filtered = moves.filter((move) =>
+      move.toLowerCase().startsWith(moveSearchTerm.toLowerCase())
+    );
+    setFilteredMoves(filtered);
+  }, [moveSearchTerm, moves]);
+  //////
+  useEffect(() => {
+    const userEmail = localStorage.getItem("loginName");
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch moves");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming data is an array of move names
+        setPokemonMoves(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching moves:", error);
+      });
+  }, [id]);
+
+  ///////
+  const fetchMoves = () => {
+    const userEmail = localStorage.getItem("loginName");
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch moves");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming data is an array of move names
+        setPokemonMoves(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching moves:", error);
+      });
+  };
+
+  useEffect(() => {
+    document.body.style.backgroundColor = "orange"; // Set background when component mounts
     const userEmail = localStorage.getItem("loginName");
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
       .then((response) => response.json())
