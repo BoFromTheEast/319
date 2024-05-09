@@ -2,78 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import setting from './setting.png';
 
-// This component will present a page where the page will read the pokemons
-// and show the pokemon's data such as health and stat as well as a png
-// from the mongodb as well as giving the user ability to add 4 pokemons to the team/bag
-// once the pokemon is added the user can remove them by clicking on the remove button on the bar of the pokemon added
-
 function TeamList() {
   const navigate = useNavigate();
-  // const [pokemonNames, setPokemonNames] = useState([]);
-
+  //pokemon bag
   const [pokemonData, setPokemonData] = useState([]);
-
+  //possible pokemons that can be searched
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
-  // useEffect(() => {
-  //   fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
-  //     .then((response) => response.json())
-  //     .then((data) => setPokemonNames(data))
-  //     .catch((error) => console.error('Error fetching pokemons:', error));
-  // }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
-      .then((response) => response.json())
-      .then((data) => setPokemonData(data))
-      .catch((error) => console.error('Error fetching pokemons:', error));
-  }, []);
-
-  const fetchPokemonNames = () => {
-    fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
-      .then((response) => response.json())
-      .then((data) => setPokemonData(data))
-      .catch((error) => console.error('Error fetching pokemons:', error));
-  };
-
+  //fetch first 150 pokemon to show as possible suggestions in search
   useEffect(() => {
     document.body.style.backgroundColor = 'pink'; // Set background when component mounts
-
     fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
       .then((response) => response.json())
-      .then((data) => setPokemons(data.results));
-
+      .then((data) => {
+        setPokemons(data.results);
+        console.log(data.results); // Log the results after setting the moves state
+      });
     return () => {
       document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 
-  const handleAddPokemon = async (name) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8081/user/pram1347@iastate.edu/pokemon`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name }), // Send the Pokémon name in the request body
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to add Pokémon');
-      }
-
-      // Reload the list of Pokémon names after adding a new Pokémon
-      fetchPokemonNames();
-    } catch (error) {
-      console.error('Error adding Pokémon:', error);
-    }
-  };
-
+  //set
   useEffect(() => {
     if (searchTerm) {
       setFilteredPokemons(
@@ -85,50 +37,48 @@ function TeamList() {
       setFilteredPokemons([]); // Clear filteredPokemons when search term is cleared
     }
   }, [searchTerm, pokemons]);
-
-  const goBack = () => {
-    navigate(-1); // Navigates back
+  //fetch all pokemon for user (used when page starts up)
+  useEffect(() => {
+    const userEmail = localStorage.getItem('loginName');
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/names`)
+      .then((response) => response.json())
+      .then((data) => setPokemonData(data))
+      .catch((error) => console.error('Error fetching pokemons:', error));
+  }, []);
+  //fetch all pokemon for user (used after pokemon is added)
+  const fetchPokemonNames = () => {
+    const userEmail = localStorage.getItem('loginName');
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/names`)
+      .then((response) => response.json())
+      .then((data) => setPokemonData(data))
+      .catch((error) => console.error('Error fetching pokemons:', error));
   };
 
-  const handlePokemonInfo = () => {
-    navigate('/PokemonInfoPage');
-  };
-
+  //handle when a pokemon name is selected in suggestions
   const handlePokemonSelect = (name) => {
     setSearchTerm(name); // Set the search term to the selected Pokémon's name
-    // setFilteredPokemons([]); // Clear the filteredPokemons state to hide the suggestions
     setFilteredPokemons(
       filteredPokemons.filter((pokemon) => pokemon.name !== name)
-    ); // Filter out the selected Pokémon
+    );
   };
-
+  //go to settings page
   const handleSetting = () => {
     navigate('/Setting');
   };
-
-  // const handleDeletePokemon = (name) => {
-  //   fetch(`http://localhost:8081/user/pram1347@iastate.edu/pokemon/${name}`, {
-  //     method: 'DELETE',
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         // If deletion is successful, update the list of pokemonNames
-  //         setPokemonNames((prevPokemonNames) =>
-  //           prevPokemonNames.filter((pokemon) => pokemon !== name)
-  //         );
-  //       } else {
-  //         console.error('Failed to delete Pokémon');
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error deleting Pokémon:', error);
-  //     });
-  // };
-
+  //go page tracking pokemon id
+  const handlePokemonInfo = (id) => {
+    navigate(`/PokemonInfoPage/${id}`);
+  };
+  //go prev page
+  const goBack = () => {
+    navigate(-1); // Navigates back
+  };
+  //delete pokemon if remove button is pressed
   const handleDeletePokemon = async (id) => {
+    const userEmail = localStorage.getItem('loginName');
     try {
       const response = await fetch(
-        `http://localhost:8081/user/pram1347@iastate.edu/pokemon/${id}`,
+        `http://localhost:8081/user/${userEmail}/pokemon/${id}`,
         {
           method: 'DELETE',
         }
@@ -145,6 +95,31 @@ function TeamList() {
     }
   };
 
+  //handle adding pokemon from search
+  const handleAddPokemon = async (name) => {
+    const userEmail = localStorage.getItem('loginName');
+    try {
+      const response = await fetch(
+        `http://localhost:8081/user/${userEmail}/pokemon`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name }), // Send the Pokémon name in the request body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to add Pokémon');
+      }
+      // Reload the list of Pokémon names after adding a new Pokémon
+      fetchPokemonNames();
+    } catch (error) {
+      console.error('Error adding Pokémon:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center mt-10 px-4">
       <button
@@ -153,6 +128,7 @@ function TeamList() {
       >
         Back
       </button>
+      {/* Search Bar */}
       <div className="w-full md:w-1/2 lg:w-1/2 relative">
         <div className="bg-sky-400 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
           <input
@@ -195,10 +171,10 @@ function TeamList() {
             >
               {/* Button to the left */}
               <button
-                // onClick = ""
+                onClick={() => handlePokemonInfo(pokemon.id)}
                 className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
               >
-                +
+                Moves
               </button>
               {/* name of pokemon */}
               <span className="flex-1 text-center">{pokemon.name}</span>

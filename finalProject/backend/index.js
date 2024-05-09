@@ -1,9 +1,9 @@
-var express = require("express");
-var cors = require("cors");
+var express = require('express');
+var cors = require('cors');
 var app = express();
-var bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const axios = require("axios"); // Ensure axios is installed and imported
+var bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const axios = require('axios'); // Ensure axios is installed and imported
 
 const Schema = mongoose.Schema; // Extract Schema from mongoose
 
@@ -11,11 +11,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const port = 8081; // Define the port
-const host = "localhost"; // Define the host
+const host = 'localhost'; // Define the host
 
-const url = "mongodb://localhost:27017/";
+const url = 'mongodb://localhost:27017/';
 
-const dbName = "FinalProject"; // Specify your database name here
+const dbName = 'FinalProject'; // Specify your database name here
 
 // Define a simple User schema as an example
 const moveSchema = new Schema({ name: String });
@@ -49,7 +49,7 @@ const userSchema = new Schema({
   password: { type: String, required: true }, // Remember to hash passwords before storing
   pokemonTeam: {
     type: [pokemonSchema],
-    validate: [teamLimit, "{PATH} exceeds the limit of 6"],
+    validate: [teamLimit, '{PATH} exceeds the limit of 6'],
   },
 });
 
@@ -58,7 +58,7 @@ function teamLimit(val) {
 }
 
 // Create a model from the schema
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 // Endpoint to get a user's Pokémon team
 // app.get('/user/:loginName/pokemon', async (req, res) => {
@@ -100,12 +100,12 @@ const User = mongoose.model("User", userSchema);
 
 // Endpoint to create a new user
 // Endpoint to create a new Pokémon for a user
-app.post("/user/:loginName/pokemon", async (req, res) => {
+app.post('/user/:loginName/pokemon', async (req, res) => {
   const { loginName } = req.params;
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).send("Pokémon name is required");
+    return res.status(400).send('Pokémon name is required');
   }
 
   try {
@@ -118,14 +118,14 @@ app.post("/user/:loginName/pokemon", async (req, res) => {
 
     // Prepare stats
     const pokemonStats = {
-      health: stats.find((stat) => stat.stat.name === "hp")?.base_stat,
-      attack: stats.find((stat) => stat.stat.name === "attack")?.base_stat,
-      defense: stats.find((stat) => stat.stat.name === "defense")?.base_stat,
-      specialAttack: stats.find((stat) => stat.stat.name === "special-attack")
+      health: stats.find((stat) => stat.stat.name === 'hp')?.base_stat,
+      attack: stats.find((stat) => stat.stat.name === 'attack')?.base_stat,
+      defense: stats.find((stat) => stat.stat.name === 'defense')?.base_stat,
+      specialAttack: stats.find((stat) => stat.stat.name === 'special-attack')
         ?.base_stat,
-      specialDefense: stats.find((stat) => stat.stat.name === "special-defense")
+      specialDefense: stats.find((stat) => stat.stat.name === 'special-defense')
         ?.base_stat,
-      speed: stats.find((stat) => stat.stat.name === "speed")?.base_stat,
+      speed: stats.find((stat) => stat.stat.name === 'speed')?.base_stat,
     };
 
     // Prepare possible moves
@@ -136,15 +136,15 @@ app.post("/user/:loginName/pokemon", async (req, res) => {
 
     // Extract dream_world front default image URL
     // Extract dream_world front default image URL if it exists, otherwise provide a default value
-    const imageUrl = sprites.other["dream_world"]
-      ? sprites.other["dream_world"].front_default
-      : "default_image_url_here";
+    const imageUrl = sprites.other['dream_world']
+      ? sprites.other['dream_world'].front_default
+      : 'default_image_url_here';
 
     // Find the user by login name
     const user = await User.findOne({ loginName });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send('User not found');
     }
 
     // Add the new Pokémon to the user's team
@@ -161,18 +161,18 @@ app.post("/user/:loginName/pokemon", async (req, res) => {
     await user.save();
 
     // Respond with success message
-    res.status(200).send("Pokémon added successfully");
+    res.status(200).send('Pokémon added successfully');
   } catch (error) {
-    console.error("Error adding Pokémon:", error);
-    res.status(500).send("Failed to add Pokémon");
+    console.error('Error adding Pokémon:', error);
+    res.status(500).send('Failed to add Pokémon');
   }
 });
 
-app.post("/signup", async (req, res) => {
+app.post('/signup', async (req, res) => {
   const { name, loginName, password } = req.body;
 
   if (!loginName || !password) {
-    return res.status(400).send("Login name and password are required");
+    return res.status(400).send('Login name and password are required');
   }
 
   try {
@@ -188,19 +188,19 @@ app.post("/signup", async (req, res) => {
     await newUser.save();
 
     // Respond with success message
-    res.status(201).send("User created successfully");
+    res.status(201).send('User created successfully');
   } catch (error) {
-    console.error("Error creating new user:", error);
-    res.status(500).send("Error creating new user");
+    console.error('Error creating new user:', error);
+    res.status(500).send('Error creating new user');
   }
 });
 
 // Endpoint to handle user login
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
   const { loginName, password } = req.body;
 
   if (!loginName || !password) {
-    return res.status(400).send("Both login name and password are required");
+    return res.status(400).send('Both login name and password are required');
   }
 
   try {
@@ -208,7 +208,7 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ loginName: loginName });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send('User not found');
     }
 
     //   // Check if the provided password matches the stored password
@@ -228,25 +228,25 @@ app.post("/login", async (req, res) => {
     if (user.password === password) {
       // If matching, respond with a success message (and potentially a token or session id)
       // Assuming a token is generated here
-      const token = "generated-token-here"; // Placeholder for token generation logic
-      res.status(200).json({ message: "Login successful", token: token });
+      const token = 'generated-token-here'; // Placeholder for token generation logic
+      res.status(200).json({ message: 'Login successful', token: token });
     } else {
       // If not matching, respond with an unauthorized message
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Error during login" });
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Error during login' });
   }
 });
 
 // Endpoint to update user password
-app.put("/user/:loginName/password", async (req, res) => {
+app.put('/user/:loginName/password', async (req, res) => {
   const { loginName } = req.params;
   const { newPassword } = req.body;
 
   if (!newPassword) {
-    return res.status(400).send("New password is required");
+    return res.status(400).send('New password is required');
   }
 
   try {
@@ -254,7 +254,7 @@ app.put("/user/:loginName/password", async (req, res) => {
     const user = await User.findOne({ loginName: loginName });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send('User not found');
     }
 
     // Update the user's password
@@ -264,16 +264,16 @@ app.put("/user/:loginName/password", async (req, res) => {
     await user.save();
 
     // Respond with a success message
-    res.status(200).send("Password updated successfully");
+    res.status(200).send('Password updated successfully');
   } catch (error) {
-    console.error("Error updating password:", error);
-    res.status(500).send("Failed to update password");
+    console.error('Error updating password:', error);
+    res.status(500).send('Failed to update password');
   }
 });
 
 // Endpoint to remove a move from a Pokémon in a user's team
 app.delete(
-  "/user/:loginName/pokemon/:pokemonName/move/:moveName",
+  '/user/:loginName/pokemon/:pokemonName/move/:moveName',
   async (req, res) => {
     const { loginName, pokemonName, moveName } = req.params;
 
@@ -282,13 +282,13 @@ app.delete(
       const user = await User.findOne({ loginName: loginName });
 
       if (!user) {
-        return res.status(404).send("User not found");
+        return res.status(404).send('User not found');
       }
 
       // Find the Pokémon and remove the move
       const pokemon = user.pokemonTeam.find((p) => p.name === pokemonName);
       if (!pokemon) {
-        return res.status(404).send("Pokémon not found");
+        return res.status(404).send('Pokémon not found');
       }
 
       // Filter out the move to be removed
@@ -296,17 +296,17 @@ app.delete(
       pokemon.moves = pokemon.moves.filter((move) => move.name !== moveName);
 
       if (pokemon.moves.length === initialMovesCount) {
-        return res.status(404).send("Move not found");
+        return res.status(404).send('Move not found');
       }
 
       // Save the updated user document
       await user.save();
 
       // Respond with success message
-      res.status(200).send("Move removed successfully");
+      res.status(200).send('Move removed successfully');
     } catch (error) {
-      console.error("Error removing move:", error);
-      res.status(500).send("Failed to remove move");
+      console.error('Error removing move:', error);
+      res.status(500).send('Failed to remove move');
     }
   }
 );
@@ -320,7 +320,7 @@ app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
     const user = await User.findOne({ loginName });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send('User not found');
     }
 
     // Find the index of the Pokémon to be removed
@@ -339,20 +339,20 @@ app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
     await user.save();
 
     // Respond with success message
-    res.status(200).send("Pokémon removed successfully");
+    res.status(200).send('Pokémon removed successfully');
   } catch (error) {
-    console.error("Error removing Pokémon:", error);
-    res.status(500).send("Failed to remove Pokémon");
+    console.error('Error removing Pokémon:', error);
+    res.status(500).send('Failed to remove Pokémon');
   }
 });
 
 // Endpoint to add a move to a Pokémon in a user's team
-app.post("/user/:loginName/pokemon/:pokemonName/move", async (req, res) => {
+app.post('/user/:loginName/pokemon/:pokemonName/move', async (req, res) => {
   const { loginName, pokemonName } = req.params;
   const { name } = req.body; // Assuming the move has only a name attribute
 
   if (!name) {
-    return res.status(400).send("Move name is required");
+    return res.status(400).send('Move name is required');
   }
 
   try {
@@ -360,14 +360,14 @@ app.post("/user/:loginName/pokemon/:pokemonName/move", async (req, res) => {
     const user = await User.findOne({ loginName: loginName });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send('User not found');
     }
 
     // Find the Pokémon to add the move to
     const pokemon = user.pokemonTeam.find((p) => p.name === pokemonName);
 
     if (!pokemon) {
-      return res.status(404).send("Pokémon not found");
+      return res.status(404).send('Pokémon not found');
     }
 
     // Add the new move to the Pokémon's moves array
@@ -375,17 +375,17 @@ app.post("/user/:loginName/pokemon/:pokemonName/move", async (req, res) => {
       // Check if less than 4 moves to comply with the limit
       pokemon.moves.push({ name: name });
     } else {
-      return res.status(400).send("No more than 4 moves allowed");
+      return res.status(400).send('No more than 4 moves allowed');
     }
 
     // Save the updated user document
     await user.save();
 
     // Respond with success message
-    res.status(200).send("Move added successfully");
+    res.status(200).send('Move added successfully');
   } catch (error) {
-    console.error("Error adding move:", error);
-    res.status(500).send("Failed to add move");
+    console.error('Error adding move:', error);
+    res.status(500).send('Failed to add move');
   }
 });
 //get pokemon name and id
@@ -410,12 +410,57 @@ app.get('/user/:loginName/pokemon/names', async (req, res) => {
   }
 });
 
+// Define your endpoint to get all possible moves for a Pokémon in a user's team
+app.get('/user/:loginName/pokemon/:pokemonId/moves', async (req, res) => {
+  try {
+    // Find the user by login name
+    const user = await User.findOne({ loginName: req.params.loginName });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Find the Pokémon in the user's team by ID
+    const pokemon = user.pokemonTeam.find(
+      (p) => p._id.toString() === req.params.pokemonId
+    );
+
+    if (!pokemon) {
+      return res.status(404).send('Pokémon not found in user team');
+    }
+
+    // Return the possible moves for the Pokémon
+    res.json(pokemon.possibleMoves);
+  } catch (error) {
+    console.error('Database query failed', error);
+    res.status(500).send('Failed to retrieve Pokémon moves');
+  }
+});
+
+// Define your endpoint to get all possible moves for a Pokémon
+// app.get('/pokemon/:pokemonName/moves', async (req, res) => {
+//   try {
+//     // Find the Pokémon by name
+//     const pokemon = await Pokemon.findOne({ name: req.params.pokemonName });
+
+//     if (!pokemon) {
+//       return res.status(404).send('Pokémon not found');
+//     }
+
+//     // Return the array of possible moves for the Pokémon
+//     res.json(pokemon.possibleMoves);
+//   } catch (error) {
+//     console.error('Database query failed', error);
+//     res.status(500).send('Failed to retrieve Pokémon moves');
+//   }
+// });
+
 mongoose
   .connect(`${url}${dbName}`)
   .then(() => {
-    console.log("Connected successfully to MongoDB using Mongoose");
+    console.log('Connected successfully to MongoDB using Mongoose');
     app.listen(port, host, () => {
       console.log(`Server running at http://${host}:${port}`);
     });
   })
-  .catch((err) => console.error("Failed to connect to MongoDB", err));
+  .catch((err) => console.error('Failed to connect to MongoDB', err));
