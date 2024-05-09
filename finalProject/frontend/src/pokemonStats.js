@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LeftButton from "./leftButton.png";
 import RightButton from "./rightButton.png";
 import setting from "./setting.png";
+import pokemonGif from "./pokemon-gif.gif";
 import axios from "axios"; // Make sure to import axios here
 
 function PokemonStats() {
@@ -31,7 +32,6 @@ function PokemonStats() {
       try {
         const response = await axios.get(
           `http://localhost:8081/user/${loginName}/pokemon`,
-          // `http://localhost:8081/user/test@iastate.edu/pokemon`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -107,6 +107,9 @@ function PokemonStats() {
         >
           Add Pokemon
         </button>
+      </div>
+      <div className="pokemon-display h-48 w-48">
+        <img src={pokemonGif} alt="Pokemon" />
       </div>
       {currentPokemon ? (
         <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
