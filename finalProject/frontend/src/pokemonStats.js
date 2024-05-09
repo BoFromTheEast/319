@@ -19,7 +19,7 @@ function PokemonStats(props) {
     // Set a timeout to hide the GIF and show the main content after 3 seconds
     const timer = setTimeout(() => {
       setPlayGif(false);
-    }, 1000); // Adjust this duration to match the length of your GIF
+    }, 2000); // Adjust this duration to match the length of your GIF
 
     document.body.style.backgroundColor = "grey"; // Set background color when component mounts
 
@@ -105,7 +105,8 @@ function PokemonStats(props) {
         <img
           src={battleGif}
           alt="Loading Battle..."
-          className="flex flex-col items-center justify-center h-50 w-50"
+          style={{ height: "800px", width: "800px" }}
+          className="flex flex-col items-center justify-center mt-10"
         />
       ) : (
         <>
