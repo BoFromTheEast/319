@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import setting from "./setting.png";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import setting from './setting.png';
 
 function TeamList() {
   const navigate = useNavigate();
@@ -8,7 +8,7 @@ function TeamList() {
   const [pokemonData, setPokemonData] = useState([]);
   //possible pokemons that can be searched
   const [pokemons, setPokemons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
   //fetch first 150 pokemon to show as possible suggestions in search
@@ -18,10 +18,10 @@ function TeamList() {
       .then((response) => response.json())
       .then((data) => {
         setPokemons(data.results);
-        console.log(data.results); // Log the results after setting the moves state
+        console.log(pokemons); // Log the results after setting the moves state
       });
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 
@@ -63,7 +63,7 @@ function TeamList() {
   };
   //go to settings page
   const handleSetting = () => {
-    navigate("/Setting");
+    navigate('/Setting');
   };
   //go page tracking pokemon id
   const handlePokemonInfo = (id) => {
@@ -80,18 +80,18 @@ function TeamList() {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon/${id}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete Pokémon");
+        throw new Error('Failed to delete Pokémon');
       }
 
       // Remove the deleted Pokémon from the state
       setPokemonData(pokemonData.filter((pokemon) => pokemon.id !== id));
     } catch (error) {
-      console.error("Error deleting Pokémon:", error);
+      console.error('Error deleting Pokémon:', error);
     }
   };
 
@@ -135,7 +135,7 @@ function TeamList() {
             type="text"
             placeholder="Search Pokemon"
             className="flex-1 text-black rounded-lg"
-            style={{ padding: "8px", fontSize: "16px" }}
+            style={{ padding: '8px', fontSize: '16px' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

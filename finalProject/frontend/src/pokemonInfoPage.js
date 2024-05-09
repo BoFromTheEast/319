@@ -6,6 +6,20 @@ function PokemonInfoPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [moves, setMoves] = useState([]);
+
+  //fetch first 150 pokemon to show as possible suggestions in search
+  //fetch moves for the specific Pokémon
+  useEffect(() => {
+    const userEmail = localStorage.getItem('loginName');
+    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMoves(data);
+        console.log(data); // Log the updated moves
+      })
+      .catch((error) => console.error('Error fetching moves:', error));
+  }, [id]); // Include id and moves in the dependency array
+
   useEffect(() => {
     document.body.style.backgroundColor = 'orange'; // Set background when component mounts
 
@@ -59,23 +73,20 @@ function PokemonInfoPage() {
       {/* Pokemon Moves */}
       <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
         <div className="p-5">
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <button
-              // onClick={handlePokemonInfo}
-              className="flex-1 text-center"
-            >
-              Pokemon move 1
-            </button>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
+          <h2 className="text-white font-bold text-center mb-3">Moves</h2>
+          <ul className="space-y-2">
+            {moves.map((move, index) => (
+              <li
+                key={index}
+                className="bg-green-500 text-white font-bold p-2 rounded-lg shadow-lg flex justify-between items-center"
+              >
+                {move}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
+
       <div className="space-y-4 mt-10 flex justify-center items-center">
         <button
           onClick={handleSetting}
