@@ -6,7 +6,7 @@ function TeamList(props) {
   //pokemon bag
   const [pokemonData, setPokemonData] = useState([]);
   const [pokemons, setPokemons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
   //fetch first 150 pokemon to show as possible suggestions in search
@@ -23,7 +23,7 @@ function TeamList(props) {
       .then((response) => response.json())
       .then((data) => {
         setPokemons(data.results);
-        console.log(data.results); // Log the results after setting the pokemons state
+        console.log(pokemons); // Log the results after setting the moves state
       });
 
     return () => {
@@ -89,18 +89,18 @@ function TeamList(props) {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon/${id}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete Pokémon");
+        throw new Error('Failed to delete Pokémon');
       }
 
       // Remove the deleted Pokémon from the state
       setPokemonData(pokemonData.filter((pokemon) => pokemon.id !== id));
     } catch (error) {
-      console.error("Error deleting Pokémon:", error);
+      console.error('Error deleting Pokémon:', error);
     }
   };
 
@@ -144,7 +144,7 @@ function TeamList(props) {
             type="text"
             placeholder="Search Pokemon"
             className="flex-1 text-black rounded-lg"
-            style={{ padding: "8px", fontSize: "16px" }}
+            style={{ padding: '8px', fontSize: '16px' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
