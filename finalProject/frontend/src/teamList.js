@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import setting from './setting.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import setting from "./setting.png";
 
 // This component will present a page where the page will read the pokemons
 // and show the pokemon's data such as health and stat as well as a png
@@ -14,7 +14,7 @@ function TeamList() {
   const [pokemonData, setPokemonData] = useState([]);
 
   const [pokemons, setPokemons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredPokemons, setFilteredPokemons] = useState([]);
 
   // useEffect(() => {
@@ -25,10 +25,10 @@ function TeamList() {
   // }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8081/user/pram1347@iastate.edu/pokemon/names')
+    fetch("http://localhost:8081/user/pram1347@iastate.edu/pokemon/names")
       .then((response) => response.json())
       .then((data) => setPokemonData(data))
-      .catch((error) => console.error('Error fetching pokemons:', error));
+      .catch((error) => console.error("Error fetching pokemons:", error));
   }, []);
 
   const fetchPokemonNames = () => {
@@ -39,14 +39,14 @@ function TeamList() {
   };
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'pink'; // Set background when component mounts
+    document.body.style.backgroundColor = "pink"; // Set background when component mounts
 
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=150")
       .then((response) => response.json())
       .then((data) => setPokemons(data.results));
 
     return () => {
-      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
     };
   }, []);
 
@@ -91,7 +91,7 @@ function TeamList() {
   };
 
   const handlePokemonInfo = () => {
-    navigate('/PokemonInfoPage');
+    navigate("/PokemonInfoPage");
   };
 
   const handlePokemonSelect = (name) => {
@@ -100,7 +100,7 @@ function TeamList() {
   };
 
   const handleSetting = () => {
-    navigate('/Setting');
+    navigate("/Setting");
   };
 
   // const handleDeletePokemon = (name) => {
@@ -127,18 +127,18 @@ function TeamList() {
       const response = await fetch(
         `http://localhost:8081/user/pram1347@iastate.edu/pokemon/${id}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to delete Pokémon');
+        throw new Error("Failed to delete Pokémon");
       }
 
       // Remove the deleted Pokémon from the state
       setPokemonData(pokemonData.filter((pokemon) => pokemon.id !== id));
     } catch (error) {
-      console.error('Error deleting Pokémon:', error);
+      console.error("Error deleting Pokémon:", error);
     }
   };
 
@@ -155,8 +155,8 @@ function TeamList() {
           <input
             type="text"
             placeholder="Search Pokemon"
-            className="flex-1 text-black"
-            style={{ padding: '8px', fontSize: '16px' }}
+            className="flex-1 text-black rounded-lg"
+            style={{ padding: "8px", fontSize: "16px" }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
