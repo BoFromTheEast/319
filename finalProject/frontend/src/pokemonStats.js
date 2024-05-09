@@ -160,7 +160,7 @@ function PokemonStats(props) {
           )}
           <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
             <div className="p-5">
-              <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-center items-center">
+              <div className="flex justify-center">
                 {currentPokemon ? (
                   <StatsDisplay stats={currentPokemon.stats} />
                 ) : (

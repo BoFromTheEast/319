@@ -41,6 +41,10 @@ function LoginPage(props) {
     props.onNavigateToSignUp();
   };
 
+  const handleAboutUs = () => {
+    props.onAboutUs();
+  };
+
   return (
     <div className="flex justify-center mt-12">
       {/* Adjusted margin for overall vertical alignment */}
@@ -96,6 +100,12 @@ function LoginPage(props) {
             className="w-full bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 rounded-md"
           >
             Signup
+          </button>
+          <button
+            onClick={handleAboutUs}
+            className="w-full bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 rounded-md"
+          >
+            About Us
           </button>
         </div>
       </div>

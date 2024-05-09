@@ -66,19 +66,6 @@ function SignUp(props) {
         <img src={pokemon} alt="Pokemon" className="mx-auto my-4" />
         <form className="space-y-4 mt-8" onSubmit={handleSubmit}>
           <label className="block">
-            <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-              Name
-            </span>
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-              placeholder="John"
-            />
-          </label>
-
-          <label className="block">
             <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700 ">
               Email
             </span>

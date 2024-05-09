@@ -5,6 +5,7 @@ import PokemonInfoPage from "./pokemonInfoPage";
 import PokemonStats from "./pokemonStats";
 import SignUp from "./signUp";
 import Setting from "./setting.js";
+import AboutUs from "./aboutUs.js";
 
 function App() {
   const [currentView, setCurrentView] = useState("login");
@@ -38,6 +39,10 @@ function App() {
     navigateTo(`pokemoninfopage/${id}`);
   };
 
+  const handleOnAboutUs = () => {
+    navigateTo("aboutus");
+  };
+
   const renderView = () => {
     switch (currentView) {
       case "login":
@@ -45,6 +50,7 @@ function App() {
           <LoginPage
             onLoginSuccess={() => navigateTo("pokemonstats")}
             onNavigateToSignUp={() => navigateTo("signup")}
+            onAboutUs={handleOnAboutUs}
           />
         );
       case "teamlist":
@@ -54,6 +60,7 @@ function App() {
             onPokemonSelect={(id) => navigateTo(`pokemonstats/${id}`)}
             onSettings={handleSettings}
             onPokemonInfo={handlePokemonInfo} // Correctly pass the function reference
+            onAboutUs={handleOnAboutUs}
           />
         );
 
@@ -63,6 +70,7 @@ function App() {
             onBack={handleBack}
             onAddPokemon={() => navigateTo("teamlist")}
             onSettings={handleSettings}
+            onAboutUs={handleOnAboutUs}
           />
         );
       case "setting":
@@ -71,8 +79,14 @@ function App() {
         return <SignUp onBack={handleBack} onSubmit={handleLogin} />;
       case "pokemoninfopage":
         return (
-          <PokemonInfoPage onBack={handleBack} onSettings={handleSettings} />
+          <PokemonInfoPage
+            onBack={handleBack}
+            onSettings={handleSettings}
+            onAboutUs={handleOnAboutUs}
+          />
         );
+      case "aboutus":
+        return <AboutUs onBack={handleBack} />;
       default:
         const [route, id] = currentView.split("/");
         if (route === "pokemoninfopage") {
