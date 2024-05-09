@@ -96,7 +96,10 @@ function TeamList() {
 
   const handlePokemonSelect = (name) => {
     setSearchTerm(name); // Set the search term to the selected Pokémon's name
-    setFilteredPokemons([]); // Optionally clear the dropdown after selection
+    // setFilteredPokemons([]); // Clear the filteredPokemons state to hide the suggestions
+    setFilteredPokemons(
+      filteredPokemons.filter((pokemon) => pokemon.name !== name)
+    ); // Filter out the selected Pokémon
   };
 
   const handleSetting = () => {
