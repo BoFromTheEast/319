@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import setting from "./setting.png";
-
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import setting from './setting.png';
 
 function PokemonInfoPage() {
   const navigate = useNavigate();
-
+  const { id } = useParams();
+  const [moves, setMoves] = useState([]);
   useEffect(() => {
-    document.body.style.backgroundColor = "orange"; // Set background when component mounts
+    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 
@@ -18,12 +18,8 @@ function PokemonInfoPage() {
     navigate(-1); // Navigates back
   };
   const handleSetting = () => {
-    navigate("/Setting");
+    navigate('/Setting');
   };
-
-  //   const handlePokemonInfo = () => {
-  //     navigate("/PokemonInfoPage");
-  //   };
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
@@ -35,35 +31,31 @@ function PokemonInfoPage() {
         Back
       </button>
 
-      {/* Pokemon Title */}
-      {/* <div className="w-full md:w-1/2 lg:w-1/2">
-        <div className="bg-red-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-          <span className="flex-1 text-center">
-            Place holder for Pokemon title
-          </span>
+      {/* Pokemon Image and stats Placeholder */}
+      <div className="w-full md:w-1/2 lg:w-1/5 mt-5">
+        <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg text-center">
+          Placeholder for Pokemon's image from MongoDB
+        </div>
+      </div>
+      {/* Search Bar */}
+      <div className="w-full md:w-1/2 lg:w-1/2 relative">
+        <div className="bg-sky-400 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
+          <input
+            type="text"
+            placeholder="Search Pokemon"
+            className="flex-1 text-black"
+            style={{ padding: '8px', fontSize: '16px' }}
+            // value={searchTerm}
+            // onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <button
-            // onClick = ""
+            // onClick={() => handleAddPokemon(searchTerm)}
             className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
           >
             +
           </button>
         </div>
-      </div> */}
-
-      {/* Pokemon Image and stats Placeholder */}
-      <div className="w-full md:w-1/2 lg:w-1/5 mt-5">
-        <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg text-center">
-          Placeholder for Pokemon's image from MongoDB
-          {/* <div className="mt-3 focus:outline-black">
-            placeholder for pokemon's stats
-          </div> */}
-        </div>
       </div>
-
-      <div className="mt-3 rounded-lg shadow-lg">
-        <input></input>
-      </div>
-
       {/* Pokemon Moves */}
       <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
         <div className="p-5">
@@ -75,37 +67,6 @@ function PokemonInfoPage() {
             >
               Pokemon move 1
             </button>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon move 2</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon move 3</span>
-            <button
-              // onClick = ""
-              className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
-            >
-              -
-            </button>
-          </div>
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
-            <span className="flex-1 text-center">Pokemon move 4</span>
             <button
               // onClick = ""
               className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
