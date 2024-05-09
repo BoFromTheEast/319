@@ -4,8 +4,8 @@ import LeftButton from "./leftButton.png";
 import RightButton from "./rightButton.png";
 import setting from "./setting.png";
 // import pokemonGif from "./pokemon-gif.gif";
-import trainerGif from "./trainer.gif";
 import battleGif from "./hot.gif";
+import boxBack from "./box.gif";
 import axios from "axios"; // Make sure to import axios here
 
 function PokemonStats(props) {
@@ -160,12 +160,17 @@ function PokemonStats(props) {
           )}
           <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
             <div className="p-5">
-              <div className="flex justify-center">
-                {currentPokemon ? (
-                  <StatsDisplay stats={currentPokemon.stats} />
-                ) : (
-                  <p>No Pokémon!</p>
-                )}
+              <div
+                className="flex justify-center"
+                style={{ backgroundImage: `url(${boxBack})` }}
+              >
+                <div className="bg-white p-5 rounded-lg shadow-lg max-w-xs w-full mx-5 my-5 text-center">
+                  {currentPokemon ? (
+                    <StatsDisplay stats={currentPokemon.stats} />
+                  ) : (
+                    <p>No Pokémon!</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

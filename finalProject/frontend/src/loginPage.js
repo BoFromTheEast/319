@@ -1,10 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import pokemon from "./pokemon.png";
+import wallpaper from "./pokemonlogin.gif";
 
 function LoginPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  
+  useEffect(() => {
+    // Set background GIF and color when component mounts
+    document.body.style.backgroundColor = "pink";
+    document.body.style.backgroundImage = `url(${wallpaper})`;
+    document.body.style.backgroundSize = "cover"; // Cover the entire body
+    document.body.style.backgroundPosition = "center"; // Center the background image
+    document.body.style.backgroundRepeat = "no-repeat"; // Do not repeat the background image
+    document.body.style.backgroundAttachment = "fixed";
+
+    return () => {
+      // Revert background styles on unmount if necessary
+      document.body.style.background = "";
+      document.body.style.backgroundColor = "";
+    };
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
