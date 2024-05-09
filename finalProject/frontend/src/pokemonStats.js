@@ -6,20 +6,28 @@ import RightButton from "./rightButton.png";
 import setting from "./setting.png";
 // import pokemonGif from "./pokemon-gif.gif";
 import trainerGif from "./trainer.gif";
-import batlleGif from "./hot.gif";
+import battleGif from "./hot.gif";
 import axios from "axios"; // Make sure to import axios here
 
 function PokemonStats() {
   const navigate = useNavigate();
+  const [playGif, setPlayGif] = useState(false);
   const [pokemonTeam, setPokemonTeam] = useState([]);
 
   const [currentPokemonIndex, setCurrentPokemonIndex] = useState(0);
 
   useEffect(() => {
-    document.body.style.backgroundColor = "grey"; // Set background when component mounts
+    setPlayGif(true);
+    // Set a timeout to hide the GIF and show the main content after 3 seconds
+    const timer = setTimeout(() => {
+      setPlayGif(false);
+    }, 3000); // Adjust this duration to match the length of your GIF
+
+    document.body.style.backgroundColor = "grey"; // Set background color when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      clearTimeout(timer); // Clear the timeout when the component unmounts
+      document.body.style.backgroundColor = ""; // Revert the background color
     };
   }, []);
 
@@ -96,89 +104,81 @@ function PokemonStats() {
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
-      {/* Buttons */}
-      <div className="flex justify-between w-full px-4">
-        {/* Back button aligned with content width */}
-        <button
-          onClick={goBack}
-          className="self-start bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-        >
-          Back
-        </button>
-        {/* Button to go to the bag */}
-        <button
-          onClick={handleAddPokemon}
-          className="self-start bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-        >
-          Add Pokemon
-        </button>
-      </div>
-      <div className="pokemon-display h-48 w-48">
-        <img src={trainerGif} alt="Pokemon" />
-      </div>
-      {currentPokemon ? (
-        <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
-          {/* Pokemon Image and Stats Placeholder */}
-          <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
-            {/* Display the Pokémon name with styled div */}
-            <p className="text-2xl font-bold text-black-500 uppercase tracking-wide">
-              {currentPokemon.name}
-            </p>
-            {/* Container for the image */}
-            <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg mt-3 flex justify-center">
-              <img
-                src={currentPokemon?.dreamWorldImageUrl}
-                alt={
-                  currentPokemon
-                    ? `Image of ${currentPokemon.name}`
-                    : "Loading Pokémon image"
-                }
-                className="h-48 w-48" // Set image size
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between w-full px-4 mt-4">
-            <button
-              onClick={() => handleNavigatePokemon("left")}
-              className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-            >
-              <img src={LeftButton} alt="Left" className="h-8 w-8" />
-            </button>
-            <button
-              onClick={() => handleNavigatePokemon("right")}
-              className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-            >
-              <img src={RightButton} alt="Right" className="h-8 w-8" />
-            </button>
-          </div>
-        </div>
+      {playGif ? (
+        <img
+          src={battleGif}
+          alt="Loading Battle..."
+          className="flex flex-col items-center justify-center h-50 w-50"
+        />
       ) : (
-        <p>No Pokémon available.</p>
-      )}
-      {/* Pokemon Stats */}
-      <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
-        <div className="p-5">
-          <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            <div className="flex-1 text-center">
-              {currentPokemon ? (
-                <StatsDisplay stats={currentPokemon.stats} />
-              ) : (
-                <p>Loading stats...</p>
-              )}
+        <>
+          <div className="flex justify-between w-full px-4">
+            <button
+              onClick={goBack}
+              className="self-start bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleAddPokemon}
+              className="self-start bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+            >
+              Add Pokemon
+            </button>
+          </div>
+          {currentPokemon ? (
+            <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
+              <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
+                <p className="text-2xl font-bold text-black-500 uppercase tracking-wide">
+                  {currentPokemon.name}
+                </p>
+                <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg mt-3 flex justify-center">
+                  <img
+                    src={currentPokemon?.dreamWorldImageUrl}
+                    alt={`Image of ${currentPokemon.name}`}
+                    className="h-48 w-48"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between w-full px-4 mt-4">
+                <button
+                  onClick={() => handleNavigatePokemon("left")}
+                  className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+                >
+                  <img src={LeftButton} alt="Left" className="h-8 w-8" />
+                </button>
+                <button
+                  onClick={() => handleNavigatePokemon("right")}
+                  className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+                >
+                  <img src={RightButton} alt="Right" className="h-8 w-8" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p>No Pokémon available.</p>
+          )}
+          <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
+            <div className="p-5">
+              <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
+                {currentPokemon ? (
+                  <StatsDisplay stats={currentPokemon.stats} />
+                ) : (
+                  <p>Loading stats...</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* Setting */}
-      <div className="space-y-4 mt-10 flex justify-center items-center">
-        <button
-          onClick={handleSetting}
-          className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-        >
-          <img src={setting} alt="setting" className="h-8 w-8" />
-        </button>
-      </div>
+          <div className="space-y-4 mt-10 flex justify-center items-center">
+            <button
+              onClick={handleSetting}
+              className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+            >
+              <img src={setting} alt="setting" className="h-8 w-8" />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
