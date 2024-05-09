@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import LeftButton from "./leftButton.png";
 import RightButton from "./rightButton.png";
 import setting from "./setting.png";
-import pokemonGif from "./pokemon-gif.gif";
+// import pokemonGif from "./pokemon-gif.gif";
+import trainerGif from "./trainer.gif";
+import batlleGif from "./hot.gif";
 import axios from "axios"; // Make sure to import axios here
 
 function PokemonStats() {
   const navigate = useNavigate();
   const [pokemonTeam, setPokemonTeam] = useState([]);
+
   const [currentPokemonIndex, setCurrentPokemonIndex] = useState(0);
 
   useEffect(() => {
@@ -62,7 +65,9 @@ function PokemonStats() {
       <div className="text-lg">
         {" "}
         {/* Larger text for the entire container */}
-        <h1 className="text-xl font-bold mb-2">Stats</h1>{" "}
+        <h1 className="text-2xl font-bold text-black-500 uppercase tracking-wide mb-2">
+          Stats
+        </h1>
         {/* Larger and bold title */}
         <ul>
           <li className="text-black">Health: {stats.health}</li>
@@ -109,14 +114,16 @@ function PokemonStats() {
         </button>
       </div>
       <div className="pokemon-display h-48 w-48">
-        <img src={pokemonGif} alt="Pokemon" />
+        <img src={trainerGif} alt="Pokemon" />
       </div>
       {currentPokemon ? (
         <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
           {/* Pokemon Image and Stats Placeholder */}
           <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
             {/* Display the Pokémon name with styled div */}
-            {currentPokemon.name}
+            <p className="text-2xl font-bold text-black-500 uppercase tracking-wide">
+              {currentPokemon.name}
+            </p>
             {/* Container for the image */}
             <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg mt-3 flex justify-center">
               <img
