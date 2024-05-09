@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 // left and right button
-import LeftButton from "./leftButton.png";
-import RightButton from "./rightButton.png";
-import setting from "./setting.png";
-// import pokemonGif from "./pokemon-gif.gif";
-import battleGif from "./hot.gif";
-import boxBack from "./box.gif";
-import axios from "axios"; // Make sure to import axios here
+import LeftButton from './leftButton.png';
+import RightButton from './rightButton.png';
+import setting from './setting.png';
+import battleGif from './hot.gif';
+import boxBack from './box.gif';
+import axios from 'axios';
 
 function PokemonStats(props) {
+  //states
   const [playGif, setPlayGif] = useState(false);
   const [pokemonTeam, setPokemonTeam] = useState([]);
 
@@ -19,22 +19,22 @@ function PokemonStats(props) {
     // Set a timeout to hide the GIF and show the main content after 3 seconds
     const timer = setTimeout(() => {
       setPlayGif(false);
-    }, 2000); // Adjust this duration to match the length of your GIF
+    }, 2000);
 
-    document.body.style.backgroundColor = "grey"; // Set background color when component mounts
+    document.body.style.backgroundColor = 'grey'; // Set background color when component mounts
 
     return () => {
       clearTimeout(timer); // Clear the timeout when the component unmounts
-      document.body.style.backgroundColor = ""; // Revert the background color
+      document.body.style.backgroundColor = '';
     };
   }, []);
-
+  //fetch all pokemon in team
   useEffect(() => {
     async function fetchPokemon() {
-      const token = localStorage.getItem("userToken");
-      const loginName = localStorage.getItem("loginName");
+      const token = localStorage.getItem('userToken');
+      const loginName = localStorage.getItem('loginName');
       if (!token || !loginName) {
-        alert("Please log in again.");
+        alert('Please log in again.');
         return props.onFail();
       }
 
@@ -47,16 +47,16 @@ function PokemonStats(props) {
         );
         setPokemonTeam(response.data.pokemonTeam);
       } catch (error) {
-        console.error("Failed to fetch Pokémon:", error);
+        console.error('Failed to fetch Pokémon:', error);
       }
     }
 
     fetchPokemon();
   }, []);
-
+  //handle going back and forth between pokemon
   const handleNavigatePokemon = (direction) => {
     setCurrentPokemonIndex((prev) =>
-      direction === "left"
+      direction === 'left'
         ? prev > 0
           ? prev - 1
           : pokemonTeam.length - 1
@@ -66,6 +66,7 @@ function PokemonStats(props) {
 
   const currentPokemon = pokemonTeam[currentPokemonIndex];
 
+  //navigation
   const goBack = () => {
     props.onBack();
   };
@@ -76,15 +77,14 @@ function PokemonStats(props) {
     props.onSettings();
   };
 
+  //stats Display Component
   function StatsDisplay({ stats }) {
     return (
       <div className="text-lg">
-        {" "}
-        {/* Larger text for the entire container */}
+        {' '}
         <h1 className="text-2xl font-bold text-black-500 uppercase tracking-wide mb-2">
           Stats
         </h1>
-        {/* Larger and bold title */}
         <ul>
           <li className="text-black">Health: {stats.health}</li>
           <li className="text-black">Attack: {stats.attack}</li>
@@ -105,7 +105,7 @@ function PokemonStats(props) {
         <img
           src={battleGif}
           alt="Loading Battle..."
-          style={{ height: "800px", width: "800px" }}
+          style={{ height: '800px', width: '800px' }}
           className="flex flex-col items-center justify-center mt-10"
         />
       ) : (
@@ -140,13 +140,13 @@ function PokemonStats(props) {
               </div>
               <div className="flex justify-between w-full px-4 mt-4">
                 <button
-                  onClick={() => handleNavigatePokemon("left")}
+                  onClick={() => handleNavigatePokemon('left')}
                   className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
                 >
                   <img src={LeftButton} alt="Left" className="h-8 w-8" />
                 </button>
                 <button
-                  onClick={() => handleNavigatePokemon("right")}
+                  onClick={() => handleNavigatePokemon('right')}
                   className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
                 >
                   <img src={RightButton} alt="Right" className="h-8 w-8" />

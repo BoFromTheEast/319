@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import pokemon from "./pokemon2.png";
+import React, { useState, useEffect } from 'react';
+import pokemon from './pokemon2.png';
 
 function SignUp(props) {
   const [formData, setFormData] = useState({
-    name: "", //handle name value
-    email: "", //handle email value
-    password: "", //handle password value
+    name: '',
+    email: '',
+    password: '',
   });
 
   useEffect(() => {
-    document.body.style.backgroundColor = "tan"; // Set background when component mounts
+    document.body.style.backgroundColor = 'tan'; // Set background when component mounts
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = '';
     };
   }, []);
-
+  //go back
   const goBack = () => {
     props.onBack();
   };
@@ -23,31 +23,31 @@ function SignUp(props) {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  //handle signup
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
     try {
-      const response = await fetch("http://localhost:8081/signup", {
-        method: "POST", //Creating a new user
+      const response = await fetch('http://localhost:8081/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: formData.name,
-          loginName: formData.email, // Assuming your backend expects loginName instead of email
+          loginName: formData.email,
           password: formData.password,
         }),
       });
 
       if (response.ok) {
-        props.onSubmit(); // Navigate on successful sign up
+        props.onSubmit();
       } else {
         const text = await response.text();
         alert(`Failed to sign up: ${text}`);
       }
     } catch (error) {
-      console.error("Sign up error:", error);
-      alert("Failed to sign up, please try again later.");
+      console.error('Sign up error:', error);
+      alert('Failed to sign up, please try again later.');
     }
   };
 

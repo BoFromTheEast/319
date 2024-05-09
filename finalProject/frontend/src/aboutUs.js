@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from "react";
-import Trainer2 from "./trainer2.gif";
-import Trainer3 from "./trainer3.gif";
+//setup
+import React, { useEffect } from 'react';
+import Trainer2 from './trainer2.gif';
+import Trainer3 from './trainer3.gif';
 
 function AboutUs(props) {
+  //set up background color
   useEffect(() => {
-    document.body.style.backgroundColor = "tan"; // Set background when component mounts
+    document.body.style.backgroundColor = 'tan';
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = '';
     };
   }, []);
+  //go back to prev page
   const goBack = () => {
     props.onBack();
   };
 
-  // Sample data for students and instructors
+  //course info
   const courseInfo = {
-    courseName: "SE/ComS319 Construction of User Interfaces, Spring 2024",
-    currentDate: new Date().toLocaleDateString(), // You can format this date as needed
+    courseName: 'SE/ComS319 Construction of User Interfaces, Spring 2024',
+    currentDate: new Date().toLocaleDateString(),
     students: [
-      { name: "Bo Oo", email: "bhoo@iastate.edu" },
-      { name: "Ponciano Ramirez", email: "pramirez4@iastate.edu" },
+      { name: 'Bo Oo', email: 'bhoo@iastate.edu' },
+      { name: 'Ponciano Ramirez', email: 'pramirez4@iastate.edu' },
     ],
-    instructor: [{ name: "Dr. Ali Jannesari", email: "ajannesari@isu.edu" }],
+    instructor: [{ name: 'Dr. Ali Jannesari', email: 'ajannesari@isu.edu' }],
   };
 
   return (
     <div className="container mx-auto px-4">
+      {/* go back buttton */}
       <button
         onClick={goBack}
         className="mb-4 mt-4 px-4 py-2 bg-gray-300 rounded"
       >
         Go Back
       </button>
+      {/* course info */}
       <div className="flex flex-col items-center">
         <h1 className="text-xl font-bold mb-2">{courseInfo.courseName}</h1>
         <p>Date: {courseInfo.currentDate}</p>
       </div>
-
       <div className="flex flex-col items-center">
         <h2 className="text-lg font-semibold mt-4">Students</h2>
         {courseInfo.students.map((student) => (

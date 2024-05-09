@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
-import pokemon from "./pokemon.png";
-import wallpaper from "./pokemonlogin.gif";
+//setup
+import React, { useState, useEffect } from 'react';
+import pokemon from './pokemon.png';
+import wallpaper from './pokemonlogin.gif';
 
 function LoginPage(props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  //states
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     // Set background GIF and color when component mounts
-    document.body.style.backgroundColor = "pink";
+    document.body.style.backgroundColor = 'pink';
     document.body.style.backgroundImage = `url(${wallpaper})`;
-    document.body.style.backgroundSize = "cover"; // Cover the entire body
-    document.body.style.backgroundPosition = "center"; // Center the background image
-    document.body.style.backgroundRepeat = "no-repeat"; // Do not repeat the background image
-    document.body.style.backgroundAttachment = "fixed";
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
 
     return () => {
-      // Revert background styles on unmount if necessary
-      document.body.style.background = "";
-      document.body.style.backgroundColor = "";
+      document.body.style.background = '';
+      document.body.style.backgroundColor = '';
     };
   }, []);
-
+  //send request to login
   const handleLogin = async (event) => {
     event.preventDefault();
     const loginDetails = {
@@ -31,29 +32,29 @@ function LoginPage(props) {
     };
 
     try {
-      const response = await fetch("http://localhost:8081/login", {
-        method: "POST",
+      const response = await fetch('http://localhost:8081/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(loginDetails),
       });
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("userToken", data.token);
-        localStorage.setItem("loginName", loginDetails.loginName);
-
+        localStorage.setItem('userToken', data.token);
+        //save login name
+        localStorage.setItem('loginName', loginDetails.loginName);
         props.onLoginSuccess();
       } else {
         const errorText = await response.text();
         setErrorMessage(errorText);
       }
     } catch (error) {
-      setErrorMessage("Login request failed, please check your network.");
+      setErrorMessage('Login request failed, please check your network.');
     }
   };
-
+  //navigation
   const handleSignUp = () => {
     props.onNavigateToSignUp();
   };
@@ -64,15 +65,12 @@ function LoginPage(props) {
 
   return (
     <div className="flex justify-center mt-12">
-      {/* Adjusted margin for overall vertical alignment */}
       <div className="w-full max-w-xs">
-        {/* Constrain width for better control */}
         <div className="bg-sky-500 text-white font-bold p-10 rounded-lg shadow-lg text-center">
-          {/* Adjusted padding */}
           Pokemon TeamBuilder
         </div>
         <img src={pokemon} alt="Pokemon" className="mx-auto my-4" />
-
+        {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4 mt-8">
           <label className="block">
             <span className="block text-sm font-medium text-slate-700">
@@ -110,7 +108,7 @@ function LoginPage(props) {
           </button>
         </form>
 
-        {/* Signup */}
+        {/* Signup and About US*/}
         <div className="space-y-4 mt-40">
           <button
             onClick={handleSignUp}

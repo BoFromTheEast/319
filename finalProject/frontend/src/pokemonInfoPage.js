@@ -1,36 +1,33 @@
 import React, { useState, useEffect } from 'react';
 
 function PokemonInfoPage(props) {
-  // const { id } = useParams();
+  //get pokemon id from view before
   const { id } = props;
-  console.log('Pokemon ID:', id);
-
-  const [pokemonDetails, setPokemonDetails] = useState(null);
+  //states
   const [pokemonMoves, setPokemonMoves] = useState([]);
   const [moves, setMoves] = useState([]);
   const [moveSearchTerm, setMoveSearchTerm] = useState('');
   const [filteredMoves, setFilteredMoves] = useState([]);
 
-  //fetch all moves that a pokemon can learn
+  //fetch all moves that a pokemon can learn and set background
   useEffect(() => {
-    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
+    document.body.style.backgroundColor = 'orange';
     const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
       .then((response) => response.json())
       .then((data) => {
         setMoves(data);
-        console.log(data); // Log the updated moves
       })
       .catch((error) => console.error('Error fetching moves:', error));
   }, [id]);
-  //////////
+  //filter moves as user types
   useEffect(() => {
     const filtered = moves.filter((move) =>
       move.toLowerCase().startsWith(moveSearchTerm.toLowerCase())
     );
     setFilteredMoves(filtered);
   }, [moveSearchTerm, moves]);
-  //////
+  //fetch moves that current pokemon knows
   useEffect(() => {
     const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
@@ -41,7 +38,6 @@ function PokemonInfoPage(props) {
         return response.json();
       })
       .then((data) => {
-        // Assuming data is an array of move names
         setPokemonMoves(data);
       })
       .catch((error) => {
@@ -49,7 +45,7 @@ function PokemonInfoPage(props) {
       });
   }, [id]);
 
-  ///////
+  //function for fetchMoves
   const fetchMoves = () => {
     const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
@@ -60,32 +56,20 @@ function PokemonInfoPage(props) {
         return response.json();
       })
       .then((data) => {
-        // Assuming data is an array of move names
         setPokemonMoves(data);
       })
       .catch((error) => {
         console.error('Error fetching moves:', error);
       });
   };
-
-  useEffect(() => {
-    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
-
-    return () => {
-      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
-    };
-  }, []);
-
+  // Navigates back
   const goBack = () => {
-    props.onBack(); // Navigates back
-  };
-  const handleSetting = () => {
-    props.onSettings();
+    props.onBack();
   };
   // Handle adding a move
   const handleAddMove = async (moveName) => {
     const userEmail = localStorage.getItem('loginName');
-    const pokemonId = id; // Assuming you have access to the Pokémon ID
+    const pokemonId = id;
 
     try {
       const response = await fetch(
@@ -95,21 +79,20 @@ function PokemonInfoPage(props) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name: moveName }), // Send the move name as 'name' attribute
+          body: JSON.stringify({ name: moveName }),
         }
       );
 
       if (!response.ok) {
         throw new Error('Failed to add move');
       }
-
       // Reload the list of moves after adding a new move
       fetchMoves();
     } catch (error) {
       console.error('Error adding move:', error);
     }
   };
-
+  //handle delete move
   const handleDeleteMove = async (moveId) => {
     const userEmail = localStorage.getItem('loginName');
     const pokemonId = id;
@@ -132,7 +115,7 @@ function PokemonInfoPage(props) {
     }
   };
 
-  // Handle selecting a move
+  // Handle selecting a move from suggestions
   const handleMoveSelect = (moveName) => {
     setMoveSearchTerm(moveName); // Set the move search term to the selected move name
     setFilteredMoves(filteredMoves.filter((move) => move !== moveName));
@@ -140,7 +123,7 @@ function PokemonInfoPage(props) {
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
-      {/* Back button aligned with content width */}
+      {/* Back button  */}
       <button
         onClick={goBack}
         className="self-start bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
@@ -166,6 +149,7 @@ function PokemonInfoPage(props) {
             +
           </button>
         </div>
+        {/* Handles suggestions */}
         {moveSearchTerm && (
           <div className="absolute bg-sky-400 text-white w-full rounded-lg shadow-lg mt-1 overflow-y-auto max-h-60">
             {filteredMoves.map((move) => (
@@ -190,7 +174,7 @@ function PokemonInfoPage(props) {
             >
               {/* name of pokemon */}
               <span className="flex-1 text-center">{move.name}</span>
-              {/* Button to the right */}
+              {/* Button to the right to remove */}
               <button
                 onClick={() => handleDeleteMove(move._id)}
                 className="bg-red-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg"
@@ -201,15 +185,6 @@ function PokemonInfoPage(props) {
           ))}
         </div>
       </div>
-
-      {/* <div className="space-y-4 mt-10 flex justify-center items-center">
-        <button
-          onClick={handleSetting}
-          className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-        >
-          <img src={setting} alt="setting" className="h-8 w-8" />
-        </button>
-      </div> */}
     </div>
   );
 }

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import setting from "./setting.png";
+import React, { useState, useEffect } from 'react';
+import setting from './setting.png';
 
 function Setting(props) {
+  //state for password
   const [formData, setFormData] = useState({
-    password: "", //handle password value
+    password: '',
   });
 
   useEffect(() => {
-    document.body.style.backgroundColor = "grey"; // Set background when component mounts
+    document.body.style.backgroundColor = 'grey'; // Set background when component mounts
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = '';
     };
   }, []);
 
@@ -21,20 +22,20 @@ function Setting(props) {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  //handle when user clicks submit
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    const token = localStorage.getItem("userToken"); // Retrieve the token
+    event.preventDefault();
+    const token = localStorage.getItem('userToken');
     if (!token) {
-      console.error("No token found, please log in.");
-      alert("No token found, please log in.");
+      console.error('No token found, please log in.');
+      alert('No token found, please log in.');
       return;
     }
 
-    const loginName = localStorage.getItem("loginName");
+    const loginName = localStorage.getItem('loginName');
     if (!loginName) {
-      console.error("Login name not found, please log in again.");
-      alert("Login name not found, please log in again.");
+      console.error('Login name not found, please log in again.');
+      alert('Login name not found, please log in again.');
       return;
     }
 
@@ -42,19 +43,19 @@ function Setting(props) {
       const response = await fetch(
         `http://localhost:8081/user/${loginName}/password`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Use token in Authorization header
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ newPassword: formData.password }),
         }
       );
 
-      if (!response.ok) throw new Error("Password change failed.");
-      alert("Password changed successfully!");
+      if (!response.ok) throw new Error('Password change failed.');
+      alert('Password changed successfully!');
     } catch (error) {
-      console.error("Failed to change password:", error);
+      console.error('Failed to change password:', error);
       alert(error.message);
     }
   };

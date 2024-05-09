@@ -1,25 +1,20 @@
+//setup
 var express = require('express');
 var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const axios = require('axios'); // Ensure axios is installed and imported
-
-const Schema = mongoose.Schema; // Extract Schema from mongoose
-
+const axios = require('axios');
+const Schema = mongoose.Schema;
 app.use(cors());
 app.use(bodyParser.json());
-
-const port = 8081; // Define the port
-const host = 'localhost'; // Define the host
-
+const port = 8081;
+const host = 'localhost';
 const url = 'mongodb://localhost:27017/';
+const dbName = 'FinalProject';
 
-const dbName = 'FinalProject'; // Specify your database name here
-
-// Define a simple User schema as an example
+//schemas
 const moveSchema = new Schema({ name: String });
-// Define the schema for Pokémon stats
 const statsSchema = new Schema({
   health: { type: Number, required: true },
   attack: { type: Number, required: true },
@@ -28,35 +23,26 @@ const statsSchema = new Schema({
   specialDefense: Number,
   speed: Number,
 });
-// const pokemonSchema = new Schema({
-//   name: { type: String, required: true },
-//   type: { type: String, required: true },
-//   stats: statsSchema, // Embed the stats schema
-//   moves: [moveSchema], // Moves currently known
-//   possibleMoves: [moveSchema], // Moves that can be learned
-// });
 const pokemonSchema = new Schema({
   name: { type: String, required: true },
-  type: [{ type: String, required: true }], // Define type as an array of strings
+  type: [{ type: String, required: true }],
   stats: statsSchema,
-  moves: [moveSchema], // Define moves as an array of strings
-  possibleMoves: [{ type: String, required: true }], // Define possibleMoves as an array of strings
-  dreamWorldImageUrl: { type: String, required: true }, // New field for dream_world front default image URL
+  moves: [moveSchema],
+  possibleMoves: [{ type: String, required: true }],
+  dreamWorldImageUrl: { type: String, required: true },
 });
-
 const userSchema = new Schema({
   loginName: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Remember to hash passwords before storing
+  password: { type: String, required: true },
   pokemonTeam: {
     type: [pokemonSchema],
     validate: [teamLimit, '{PATH} exceeds the limit of 6'],
   },
 });
-
+//make team max of 6
 function teamLimit(val) {
   return val.length <= 6;
 }
-
 // Create a model from the schema
 const User = mongoose.model('User', userSchema);
 
@@ -81,8 +67,6 @@ app.get('/user/:loginName/pokemon', async (req, res) => {
           specialDefense: pokemon.stats.specialDefense,
           speed: pokemon.stats.speed,
         },
-        // moves: pokemon.moves.map((move) => move.name), // Current moves
-        // possibleMoves: pokemon.possibleMoves.map((move) => move.name), // Possible moves to learn
         dreamWorldImageUrl: pokemon.dreamWorldImageUrl,
       };
     });
@@ -97,9 +81,6 @@ app.get('/user/:loginName/pokemon', async (req, res) => {
   }
 });
 
-//create user
-
-// Endpoint to create a new user
 // Endpoint to create a new Pokémon for a user
 app.post('/user/:loginName/pokemon', async (req, res) => {
   const { loginName } = req.params;
@@ -115,9 +96,9 @@ app.post('/user/:loginName/pokemon', async (req, res) => {
       `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
     );
 
-    const { stats, moves, types, sprites } = pokeApiResponse.data; // Extracting types and sprites from PokéAPI response
+    const { stats, moves, types, sprites } = pokeApiResponse.data;
 
-    // Prepare stats
+    // stats
     const pokemonStats = {
       health: stats.find((stat) => stat.stat.name === 'hp')?.base_stat,
       attack: stats.find((stat) => stat.stat.name === 'attack')?.base_stat,
@@ -129,14 +110,13 @@ app.post('/user/:loginName/pokemon', async (req, res) => {
       speed: stats.find((stat) => stat.stat.name === 'speed')?.base_stat,
     };
 
-    // Prepare possible moves
+    // moves
     const pokemonMoves = moves.map((move) => move.move.name);
 
-    // Prepare types
+    // types
     const pokemonTypes = types.map((type) => type.type.name);
 
-    // Extract dream_world front default image URL
-    // Extract dream_world front default image URL if it exists, otherwise provide a default value
+    // Extract dream_world front default image URL if it exists
     const imageUrl = sprites.other['dream_world']
       ? sprites.other['dream_world'].front_default
       : 'default_image_url_here';
@@ -155,7 +135,7 @@ app.post('/user/:loginName/pokemon', async (req, res) => {
       stats: pokemonStats,
       moves: [],
       possibleMoves: pokemonMoves,
-      dreamWorldImageUrl: imageUrl, // Include dream_world front default image URL
+      dreamWorldImageUrl: imageUrl,
     });
 
     // Save the updated user document
@@ -168,7 +148,7 @@ app.post('/user/:loginName/pokemon', async (req, res) => {
     res.status(500).send('Failed to add Pokémon');
   }
 });
-
+// Endpoint to create a new user
 app.post('/signup', async (req, res) => {
   const { name, loginName, password } = req.body;
 
@@ -177,12 +157,12 @@ app.post('/signup', async (req, res) => {
   }
 
   try {
-    // Create a new user object directly with the received password
+    // Create a new user object directly with password
     const newUser = new User({
       name: name,
       loginName: loginName,
-      password: password, // Storing the password directly without hashing
-      pokemonTeam: [], // Starts with an empty Pokémon team
+      password: password,
+      pokemonTeam: [],
     });
 
     // Save the new user to the database
@@ -212,27 +192,12 @@ app.post('/login', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    //   // Check if the provided password matches the stored password
-    //   if (user.password === password) {
-    //     // If matching, respond with a success message (and potentially a token or session id)
-    //     res.status(200).send("Login successful");
-    //   } else {
-    //     // If not matching, respond with an unauthorized message
-    //     res.status(401).send("Invalid credentials");
-    //   }
-    // } catch (error) {
-    //   console.error("Login error:", error);
-    //   res.status(500).send("Error during login");
-    // }
-
     // Check if the provided password matches the stored password
     if (user.password === password) {
-      // If matching, respond with a success message (and potentially a token or session id)
-      // Assuming a token is generated here
-      const token = 'generated-token-here'; // Placeholder for token generation logic
+      // If matching, respond with a success message and token
+      const token = 'generated-token-here';
       res.status(200).json({ message: 'Login successful', token: token });
     } else {
-      // If not matching, respond with an unauthorized message
       res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
@@ -299,7 +264,7 @@ app.delete(
       pokemon.moves = pokemon.moves.filter(
         (move) => move._id.toString() !== moveId
       );
-
+      //if actually removed then this should be false (checker)
       if (pokemon.moves.length === initialMovesCount) {
         return res.status(404).send('Move not found');
       }
@@ -315,45 +280,6 @@ app.delete(
     }
   }
 );
-
-// app.delete(
-//   '/user/:loginName/pokemon/:pokemonName/move/:moveName',
-//   async (req, res) => {
-//     const { loginName, pokemonName, moveName } = req.params;
-
-//     try {
-//       // Find the user
-//       const user = await User.findOne({ loginName: loginName });
-
-//       if (!user) {
-//         return res.status(404).send('User not found');
-//       }
-
-//       // Find the Pokémon and remove the move
-//       const pokemon = user.pokemonTeam.find((p) => p.name === pokemonName);
-//       if (!pokemon) {
-//         return res.status(404).send('Pokémon not found');
-//       }
-
-//       // Filter out the move to be removed
-//       const initialMovesCount = pokemon.moves.length;
-//       pokemon.moves = pokemon.moves.filter((move) => move.name !== moveName);
-
-//       if (pokemon.moves.length === initialMovesCount) {
-//         return res.status(404).send('Move not found');
-//       }
-
-//       // Save the updated user document
-//       await user.save();
-
-//       // Respond with success message
-//       res.status(200).send('Move removed successfully');
-//     } catch (error) {
-//       console.error('Error removing move:', error);
-//       res.status(500).send('Failed to remove move');
-//     }
-//   }
-// );
 
 // Endpoint to remove a Pokémon from a user's team by ID
 app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
@@ -393,7 +319,7 @@ app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
 // Endpoint to add a move to a Pokémon in a user's team
 app.post('/user/:loginName/pokemon/:pokemonId/move', async (req, res) => {
   const { loginName, pokemonId } = req.params;
-  const { name } = req.body; // Assuming the move has only a name attribute
+  const { name } = req.body;
 
   if (!name) {
     return res.status(400).send('Move name is required');
@@ -418,7 +344,7 @@ app.post('/user/:loginName/pokemon/:pokemonId/move', async (req, res) => {
 
     // Add the new move to the Pokémon's moves array
     if (pokemon.moves.length < 4) {
-      // Check if less than 4 moves to comply with the limit
+      // Check if less than 4 moves first
       pokemon.moves.push({ name: name });
     } else {
       return res.status(400).send('No more than 4 moves allowed');
@@ -435,7 +361,7 @@ app.post('/user/:loginName/pokemon/:pokemonId/move', async (req, res) => {
   }
 });
 
-//get pokemon name and id
+//get pokemon name and id only
 app.get('/user/:loginName/pokemon/names', async (req, res) => {
   try {
     const user = await User.findOne({ loginName: req.params.loginName });
@@ -444,9 +370,9 @@ app.get('/user/:loginName/pokemon/names', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    // Extracting IDs and names of the Pokémon
+    // grab IDs and names of the Pokémon
     const pokemonData = user.pokemonTeam.map((pokemon) => ({
-      id: pokemon._id, // Assuming the ID field is named "_id"
+      id: pokemon._id,
       name: pokemon.name,
     }));
 
@@ -457,7 +383,7 @@ app.get('/user/:loginName/pokemon/names', async (req, res) => {
   }
 });
 
-// Define your endpoint to get all possible moves for a Pokémon in a user's team
+//endpoint to get all possible moves for a Pokémon in a user's team
 app.get('/user/:loginName/pokemon/:pokemonId/moves', async (req, res) => {
   try {
     // Find the user by login name
@@ -484,25 +410,7 @@ app.get('/user/:loginName/pokemon/:pokemonId/moves', async (req, res) => {
   }
 });
 
-// Define your endpoint to get all possible moves for a Pokémon
-// app.get('/pokemon/:pokemonName/moves', async (req, res) => {
-//   try {
-//     // Find the Pokémon by name
-//     const pokemon = await Pokemon.findOne({ name: req.params.pokemonName });
-
-//     if (!pokemon) {
-//       return res.status(404).send('Pokémon not found');
-//     }
-
-//     // Return the array of possible moves for the Pokémon
-//     res.json(pokemon.possibleMoves);
-//   } catch (error) {
-//     console.error('Database query failed', error);
-//     res.status(500).send('Failed to retrieve Pokémon moves');
-//   }
-// });
-
-// Get all moves for a specific Pokémon by user email and Pokémon ID
+// Get all KNOWN moves for a specific Pokémon by user email and Pokémon ID
 app.get('/user/:loginName/pokemon/:pokemonId/movess', async (req, res) => {
   try {
     const { loginName, pokemonId } = req.params;
