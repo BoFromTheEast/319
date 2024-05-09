@@ -13,17 +13,22 @@ function App() {
 
   // Navigate to a new view
   const navigateTo = (view) => {
-    setCurrentView(view);
-    setHistory((prev) => [...prev, view]); // Push new view onto history stack
+    if (currentView !== view) {
+      setCurrentView(view);
+      setHistory((prev) => [...prev, view]);
+    }
   };
 
   // Go back to the previous view
   const handleBack = () => {
     setHistory((prev) => {
-      if (prev.length === 1) return prev; // Remain on the current view if there's no history
-      const newHistory = prev.slice(0, -1);
-      setCurrentView(newHistory[newHistory.length - 1]); // Set to previous view
-      return newHistory;
+      if (prev.length > 1) {
+        const newHistory = prev.slice(0, -1);
+        setCurrentView(newHistory[newHistory.length - 1]); // Set to previous view
+        console.log(`Back to: ${newHistory[newHistory.length - 1]}`); // Logging for debug
+        return newHistory;
+      }
+      return prev; // Stay on the current view if there's no previous history
     });
   };
 

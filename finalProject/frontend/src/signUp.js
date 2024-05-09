@@ -16,7 +16,7 @@ function SignUp(props) {
   }, []);
 
   const goBack = () => {
-    props.onBack(); // Navigates back
+    props.onBack();
   };
 
   const handleChange = (event) => {
