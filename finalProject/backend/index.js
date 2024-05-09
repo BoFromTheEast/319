@@ -61,40 +61,41 @@ function teamLimit(val) {
 const User = mongoose.model("User", userSchema);
 
 // Endpoint to get a user's Pokémon team
-// app.get('/user/:loginName/pokemon', async (req, res) => {
-//   try {
-//     const user = await User.findOne({ loginName: req.params.loginName });
+app.get("/user/:loginName/pokemon", async (req, res) => {
+  try {
+    const user = await User.findOne({ loginName: req.params.loginName });
 
-//     if (!user) {
-//       return res.status(404).send('User not found');
-//     }
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
-//     const pokemonTeam = user.pokemonTeam.map((pokemon) => {
-//       return {
-//         name: pokemon.name,
-//         type: pokemon.type,
-//         stats: {
-//           health: pokemon.stats.health,
-//           attack: pokemon.stats.attack,
-//           defense: pokemon.stats.defense,
-//           specialAttack: pokemon.stats.specialAttack,
-//           specialDefense: pokemon.stats.specialDefense,
-//           speed: pokemon.stats.speed,
-//         },
-//         moves: pokemon.moves.map((move) => move.name), // Current moves
-//         possibleMoves: pokemon.possibleMoves.map((move) => move.name), // Possible moves to learn
-//       };
-//     });
+    const pokemonTeam = user.pokemonTeam.map((pokemon) => {
+      return {
+        name: pokemon.name,
+        type: pokemon.type,
+        stats: {
+          health: pokemon.stats.health,
+          attack: pokemon.stats.attack,
+          defense: pokemon.stats.defense,
+          specialAttack: pokemon.stats.specialAttack,
+          specialDefense: pokemon.stats.specialDefense,
+          speed: pokemon.stats.speed,
+        },
+        // moves: pokemon.moves.map((move) => move.name), // Current moves
+        // possibleMoves: pokemon.possibleMoves.map((move) => move.name), // Possible moves to learn
+        dreamWorldImageUrl: pokemon.dreamWorldImageUrl,
+      };
+    });
 
-//     res.json({
-//       loginName: user.loginName,
-//       pokemonTeam: pokemonTeam,
-//     });
-//   } catch (error) {
-//     console.error('Database query failed', error);
-//     res.status(500).send('Failed to retrieve user data');
-//   }
-// });
+    res.json({
+      loginName: user.loginName,
+      pokemonTeam: pokemonTeam,
+    });
+  } catch (error) {
+    console.error("Database query failed", error);
+    res.status(500).send("Failed to retrieve user data");
+  }
+});
 
 //create user
 
@@ -312,7 +313,7 @@ app.delete(
 );
 
 // Endpoint to remove a Pokémon from a user's team by ID
-app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
+app.delete("/user/:loginName/pokemon/:pokemonId", async (req, res) => {
   const { loginName, pokemonId } = req.params;
 
   try {
@@ -329,7 +330,7 @@ app.delete('/user/:loginName/pokemon/:pokemonId', async (req, res) => {
     );
 
     if (indexToRemove === -1) {
-      return res.status(404).send('Pokémon not found');
+      return res.status(404).send("Pokémon not found");
     }
 
     // Remove the Pokémon from the team array
@@ -389,12 +390,12 @@ app.post("/user/:loginName/pokemon/:pokemonName/move", async (req, res) => {
   }
 });
 //get pokemon name and id
-app.get('/user/:loginName/pokemon/names', async (req, res) => {
+app.get("/user/:loginName/pokemon/names", async (req, res) => {
   try {
     const user = await User.findOne({ loginName: req.params.loginName });
 
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     // Extracting IDs and names of the Pokémon
@@ -405,8 +406,8 @@ app.get('/user/:loginName/pokemon/names', async (req, res) => {
 
     res.json(pokemonData);
   } catch (error) {
-    console.error('Database query failed', error);
-    res.status(500).send('Failed to retrieve user data');
+    console.error("Database query failed", error);
+    res.status(500).send("Failed to retrieve user data");
   }
 });
 

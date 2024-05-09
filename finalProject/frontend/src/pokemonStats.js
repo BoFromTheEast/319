@@ -30,7 +30,8 @@ function PokemonStats() {
 
       try {
         const response = await axios.get(
-          `http://localhost:8081/user/${loginName}/pokemon`,
+          // `http://localhost:8081/user/${loginName}/pokemon`,
+          `http://localhost:8081/user/test@iastate.edu/pokemon`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -56,6 +57,27 @@ function PokemonStats() {
 
   const currentPokemon = pokemonTeam[currentPokemonIndex];
 
+  function StatsDisplay({ stats }) {
+    return (
+      <div className="text-lg">
+        {" "}
+        {/* Larger text for the entire container */}
+        <h1 className="text-xl font-bold mb-2">Stats</h1>{" "}
+        {/* Larger and bold title */}
+        <ul>
+          <li className="text-black">Health: {stats.health}</li>
+          <li className="text-black">Attack: {stats.attack}</li>
+          <li className="text-black">Defense: {stats.defense}</li>
+          <li className="text-black">Special Attack: {stats.specialAttack}</li>
+          <li className="text-black">
+            Special Defense: {stats.specialDefense}
+          </li>
+          <li className="text-black">Speed: {stats.speed}</li>
+        </ul>
+      </div>
+    );
+  }
+
   const goBack = () => {
     navigate(-1); // Navigates back
   };
@@ -69,6 +91,7 @@ function PokemonStats() {
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
+      {/* Buttons */}
       <div className="flex justify-between w-full px-4">
         {/* Back button aligned with content width */}
         <button
@@ -85,44 +108,58 @@ function PokemonStats() {
           Add Pokemon
         </button>
       </div>
+      {currentPokemon ? (
+        <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
+          {/* Pokemon Image and stats Placeholder */}
+          <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
+            {currentPokemon.name}
+            <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg mt-3 flex justify-center">
+              <img
+                src={currentPokemon?.dreamWorldImageUrl}
+                alt={
+                  currentPokemon
+                    ? `Image of ${currentPokemon.name}`
+                    : "Loading Pokémon image"
+                }
+                className="h-48 w-48" // Tailwind utility classes for width and height
+              />
+            </div>
+          </div>
 
-      <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg p-10 text-center">
-        {/* Pokemon Image and stats Placeholder */}
-        <div className="bg-white text-black font-bold p-10 rounded-lg shadow-lg">
-          {/* Placeholder for Pokemon's image from MongoDB */}
-          {/* {currentPokemon.name}; */}
+          <div className="flex justify-between w-full px-4 mt-4">
+            <button
+              onClick={() => handleNavigatePokemon("left")}
+              className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+            >
+              <img src={LeftButton} alt="Left" className="h-8 w-8" />
+            </button>
+            <button
+              onClick={() => handleNavigatePokemon("right")}
+              className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
+            >
+              <img src={RightButton} alt="Right" className="h-8 w-8" />
+            </button>
+          </div>
         </div>
-        {/* Buttons */}
-        <div className="flex justify-between w-full px-4 mt-4">
-          {/* Button to another pokemon, left button*/}
-          <button
-            onClick={() => handleNavigatePokemon("left")}
-            className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-          >
-            <img src={LeftButton} alt="Left" className="h-8 w-8" />
-          </button>
-          <button
-            onClick={() => handleNavigatePokemon("right")}
-            className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
-          >
-            <img src={RightButton} alt="Right" className="h-8 w-8" />
-          </button>
-        </div>
-      </div>
-
-      {/* Pokemon Moves */}
+      ) : (
+        <p>No Pokémon available.</p>
+      )}
+      {/* Pokemon Stats */}
+      {/* And use it in your main component like this: */}
       <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
         <div className="p-5">
           <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
-            {/* <img src=""></img> */}
             <div className="flex-1 text-center">
-              <div></div>
-              <div></div>
-              Stats
+              {currentPokemon ? (
+                <StatsDisplay stats={currentPokemon.stats} />
+              ) : (
+                <p>Loading stats...</p>
+              )}
             </div>
           </div>
         </div>
       </div>
+      {/* Setting */}
       <div className="space-y-4 mt-10 flex justify-center items-center">
         <button
           onClick={handleSetting}
