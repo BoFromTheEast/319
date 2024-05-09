@@ -1,20 +1,25 @@
-import React, { useState } from "react";
-import LoginPage from "./loginPage";
-import TeamList from "./teamList";
-import PokemonInfoPage from "./pokemonInfoPage";
-import PokemonStats from "./pokemonStats";
-import SignUp from "./signUp";
-import Setting from "./setting.js";
+import React, { useState } from 'react';
+import LoginPage from './loginPage';
+import TeamList from './teamList';
+import PokemonInfoPage from './pokemonInfoPage';
+import PokemonStats from './pokemonStats';
+import SignUp from './signUp';
+import Setting from './setting.js';
 
 function App() {
-  const [currentView, setCurrentView] = useState("login");
-  const [history, setHistory] = useState(["login"]); // This stack helps to keep track of navigation history
+  const [currentView, setCurrentView] = useState('login');
+  const [history, setHistory] = useState(['login']); // This stack helps to keep track of navigation history
+  const [selectedPokemonId, setSelectedPokemonId] = useState(null);
 
   // Navigate to a new view
-  const navigateTo = (view) => {
+  const navigateTo = (view, id = null) => {
     setCurrentView(view);
-    setHistory((prev) => [...prev, view]); // Push new view onto history stack
+    setHistory((prev) => [...prev, { view, id }]); // Push new view onto history stack
   };
+  // const navigateTo = (view) => {
+  //   setCurrentView(view);
+  //   setHistory((prev) => [...prev, view]); // Push new view onto history stack
+  // };
 
   // Go back to the previous view
   const handleBack = () => {
@@ -27,64 +32,121 @@ function App() {
   };
 
   const handleSettings = () => {
-    navigateTo("setting");
+    navigateTo('setting');
   };
 
   const handleLogin = () => {
-    navigateTo("login");
+    navigateTo('login');
   };
-
   const handlePokemonInfo = (id) => {
-    navigateTo(`pokemoninfopage/${id}`);
+    setSelectedPokemonId(id);
+
+    navigateTo('pokemoninfopage');
   };
 
+  // const handlePokemonInfo = (id) => {
+  //   navigateTo(`pokemoninfopage/${id}`);
+  // };
+
+  // const renderView = () => {
+  //   switch (currentView) {
+  //     case 'login':
+  //       return (
+  //         <LoginPage
+  //           onLoginSuccess={() => navigateTo('pokemonstats')}
+  //           onNavigateToSignUp={() => navigateTo('signup')}
+  //         />
+  //       );
+  //     case 'teamlist':
+  //       return (
+  //         // <TeamList
+  //         //   onBack={handleBack}
+  //         //   onPokemonSelect={(id) => navigateTo(`pokemonstats/${id}`)}
+  //         //   onSettings={handleSettings}
+  //         //   onPokemonInfo={handlePokemonInfo} // Correctly pass the function reference
+  //         // />
+  //         <TeamList
+  //           onBack={handleBack}
+  //           onPokemonSelect={(id) => navigateTo(`pokemonstats/${id}`)}
+  //           onSettings={handleSettings}
+  //           onPokemonInfo={handlePokemonInfo} // Pass the function reference
+  //         />
+  //       );
+
+  //     case 'pokemonstats':
+  //       return (
+  //         <PokemonStats
+  //           onBack={handleBack}
+  //           onAddPokemon={() => navigateTo('teamlist')}
+  //           onSettings={handleSettings}
+  //         />
+  //       );
+  //     case 'setting':
+  //       return <Setting onBack={handleBack} />;
+  //     case 'signup':
+  //       return <SignUp onBack={handleBack} onSubmit={handleLogin} />;
+  //     case 'pokemoninfopage':
+  //       return (
+  //         <PokemonInfoPage
+  //           id={selectedPokemonId}
+  //           onBack={handleBack}
+  //           onSettings={handleSettings}
+  //         />
+  //       );
+  //     default:
+  //       const [route, id] = currentView.split('/');
+  //       if (route === 'pokemoninfopage') {
+  //         return (
+  //           <PokemonInfoPage
+  //             pokemonId={id}
+  //             onSettings={handleSettings}
+  //             onBack={handleBack}
+  //           />
+  //         );
+  //       }
+  //       return <LoginPage />;
+  //   }
+  // };
   const renderView = () => {
     switch (currentView) {
-      case "login":
+      case 'login':
         return (
           <LoginPage
-            onLoginSuccess={() => navigateTo("pokemonstats")}
-            onNavigateToSignUp={() => navigateTo("signup")}
+            onLoginSuccess={() => navigateTo('pokemonstats')}
+            onNavigateToSignUp={() => navigateTo('signup')}
           />
         );
-      case "teamlist":
+      case 'teamlist':
         return (
           <TeamList
             onBack={handleBack}
             onPokemonSelect={(id) => navigateTo(`pokemonstats/${id}`)}
             onSettings={handleSettings}
-            onPokemonInfo={handlePokemonInfo} // Correctly pass the function reference
+            onPokemonInfo={handlePokemonInfo} // Pass the function reference
           />
         );
-
-      case "pokemonstats":
+      case 'pokemonstats':
         return (
           <PokemonStats
             onBack={handleBack}
-            onAddPokemon={() => navigateTo("teamlist")}
+            onAddPokemon={() => navigateTo('teamlist')}
             onSettings={handleSettings}
           />
         );
-      case "setting":
+      case 'setting':
         return <Setting onBack={handleBack} />;
-      case "signup":
+      case 'signup':
         return <SignUp onBack={handleBack} onSubmit={handleLogin} />;
-      case "pokemoninfopage":
+      case 'pokemoninfopage':
         return (
-          <PokemonInfoPage onBack={handleBack} onSettings={handleSettings} />
+          <PokemonInfoPage
+            id={selectedPokemonId} // Assuming `selectedPokemonId` is defined elsewhere
+            onBack={handleBack}
+            onSettings={handleSettings}
+          />
         );
       default:
-        const [route, id] = currentView.split("/");
-        if (route === "pokemoninfopage") {
-          return (
-            <PokemonInfoPage
-              pokemonId={id}
-              onSettings={handleSettings}
-              onBack={handleBack}
-            />
-          );
-        }
-        return <LoginPage />;
+        return null; // Return null if currentView doesn't match any case
     }
   };
 

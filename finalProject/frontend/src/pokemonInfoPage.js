@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import setting from "./setting.png";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import setting from './setting.png';
 
 function PokemonInfoPage(props) {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = props;
+  console.log('Pokemon ID:', id);
+
   const [pokemonMoves, setPokemonMoves] = useState([]);
   const [moves, setMoves] = useState([]);
   const [moveSearchTerm, setMoveSearchTerm] = useState('');
   const [filteredMoves, setFilteredMoves] = useState([]);
   //fetch all moves that a pokemon can learn
   useEffect(() => {
-    document.body.style.backgroundColor = "orange"; // Set background when component mounts
+    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
     const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
       .then((response) => response.json())
@@ -69,7 +72,7 @@ function PokemonInfoPage(props) {
     document.body.style.backgroundColor = 'orange'; // Set background when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 

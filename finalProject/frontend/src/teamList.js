@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import setting from "./setting.png";
-import background from "./background.gif";
+import React, { useState, useEffect } from 'react';
+import setting from './setting.png';
+import background from './background.gif';
 
 function TeamList(props) {
   //pokemon bag
@@ -12,14 +12,14 @@ function TeamList(props) {
   //fetch first 150 pokemon to show as possible suggestions in search
   useEffect(() => {
     // Set background GIF and color when component mounts
-    document.body.style.backgroundColor = "pink";
+    document.body.style.backgroundColor = 'pink';
     document.body.style.backgroundImage = `url(${background})`;
-    document.body.style.backgroundSize = "cover"; // Cover the entire body
-    document.body.style.backgroundPosition = "center"; // Center the background image
-    document.body.style.backgroundRepeat = "no-repeat"; // Do not repeat the background image
-    document.body.style.backgroundAttachment = "fixed";
+    document.body.style.backgroundSize = 'cover'; // Cover the entire body
+    document.body.style.backgroundPosition = 'center'; // Center the background image
+    document.body.style.backgroundRepeat = 'no-repeat'; // Do not repeat the background image
+    document.body.style.backgroundAttachment = 'fixed';
 
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=150")
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
       .then((response) => response.json())
       .then((data) => {
         setPokemons(data.results);
@@ -28,8 +28,8 @@ function TeamList(props) {
 
     return () => {
       // Revert background styles on unmount if necessary
-      document.body.style.background = "";
-      document.body.style.backgroundColor = "";
+      document.body.style.background = '';
+      document.body.style.backgroundColor = '';
     };
   }, []);
 
@@ -47,19 +47,19 @@ function TeamList(props) {
   }, [searchTerm, pokemons]);
   //fetch all pokemon for user (used when page starts up)
   useEffect(() => {
-    const userEmail = localStorage.getItem("loginName");
+    const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/names`)
       .then((response) => response.json())
       .then((data) => setPokemonData(data))
-      .catch((error) => console.error("Error fetching pokemons:", error));
+      .catch((error) => console.error('Error fetching pokemons:', error));
   }, []);
   //fetch all pokemon for user (used after pokemon is added)
   const fetchPokemonNames = () => {
-    const userEmail = localStorage.getItem("loginName");
+    const userEmail = localStorage.getItem('loginName');
     fetch(`http://localhost:8081/user/${userEmail}/pokemon/names`)
       .then((response) => response.json())
       .then((data) => setPokemonData(data))
-      .catch((error) => console.error("Error fetching pokemons:", error));
+      .catch((error) => console.error('Error fetching pokemons:', error));
   };
 
   //handle when a pokemon name is selected in suggestions
@@ -76,15 +76,16 @@ function TeamList(props) {
   };
   //go page tracking pokemon id
   const handlePokemonInfo = (id) => {
-    props.onPokemonInfo(id);
+    props.onPokemonInfo(id); // Use props.onPokemonInfo instead of props.handlePokemonInfo
   };
+
   //go prev page
   const goBack = () => {
     props.onBack();
   };
   //delete pokemon if remove button is pressed
   const handleDeletePokemon = async (id) => {
-    const userEmail = localStorage.getItem("loginName");
+    const userEmail = localStorage.getItem('loginName');
     try {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon/${id}`,
@@ -106,26 +107,26 @@ function TeamList(props) {
 
   //handle adding pokemon from search
   const handleAddPokemon = async (name) => {
-    const userEmail = localStorage.getItem("loginName");
+    const userEmail = localStorage.getItem('loginName');
     try {
       const response = await fetch(
         `http://localhost:8081/user/${userEmail}/pokemon`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ name }), // Send the Pokémon name in the request body
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add Pokémon");
+        throw new Error('Failed to add Pokémon');
       }
       // Reload the list of Pokémon names after adding a new Pokémon
       fetchPokemonNames();
     } catch (error) {
-      console.error("Error adding Pokémon:", error);
+      console.error('Error adding Pokémon:', error);
     }
   };
 
