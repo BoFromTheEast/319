@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import setting from "./setting.png";
 
-function Setting() {
-  const navigate = useNavigate();
+function Setting(props) {
   const [formData, setFormData] = useState({
     password: "", //handle password value
   });
@@ -16,42 +14,13 @@ function Setting() {
   }, []);
 
   const goBack = () => {
-    navigate(-1); // Navigates back
+    props.onBack(); // Navigates back
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault(); // Prevent default form submission behavior
-  //   const loginName = "Testing@gmail.com"; // This should be dynamically obtained, perhaps from user state or props
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:8081/users/${loginName}/password`,
-  //       {
-  //         method: "PUT", // Correct method for updating
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           newPassword: formData.password,
-  //         }),
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       navigate("/PokemonStats"); // Navigate on successful update
-  //     } else {
-  //       const text = await response.text();
-  //       alert(`Failed to change password: ${text}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Change password error:", error);
-  //     alert("Failed to change password, please try again later.");
-  //   }
-  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior

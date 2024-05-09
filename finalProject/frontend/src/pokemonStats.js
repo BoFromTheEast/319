@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 // left and right button
-import LeftButton from './leftButton.png';
-import RightButton from './rightButton.png';
-import setting from './setting.png';
+import LeftButton from "./leftButton.png";
+import RightButton from "./rightButton.png";
+import setting from "./setting.png";
 // import pokemonGif from "./pokemon-gif.gif";
 import trainerGif from "./trainer.gif";
 import battleGif from "./hot.gif";
 import axios from "axios"; // Make sure to import axios here
 
-function PokemonStats() {
-  const navigate = useNavigate();
+function PokemonStats(props) {
   const [playGif, setPlayGif] = useState(false);
   const [pokemonTeam, setPokemonTeam] = useState([]);
 
@@ -21,7 +19,7 @@ function PokemonStats() {
     // Set a timeout to hide the GIF and show the main content after 3 seconds
     const timer = setTimeout(() => {
       setPlayGif(false);
-    }, 3000); // Adjust this duration to match the length of your GIF
+    }, 1000); // Adjust this duration to match the length of your GIF
 
     document.body.style.backgroundColor = "grey"; // Set background color when component mounts
 
@@ -33,11 +31,11 @@ function PokemonStats() {
 
   useEffect(() => {
     async function fetchPokemon() {
-      const token = localStorage.getItem('userToken');
-      const loginName = localStorage.getItem('loginName');
+      const token = localStorage.getItem("userToken");
+      const loginName = localStorage.getItem("loginName");
       if (!token || !loginName) {
-        alert('Please log in again.');
-        return navigate('/login');
+        alert("Please log in again.");
+        return props.onFail();
       }
 
       try {
@@ -49,16 +47,16 @@ function PokemonStats() {
         );
         setPokemonTeam(response.data.pokemonTeam);
       } catch (error) {
-        console.error('Failed to fetch Pokémon:', error);
+        console.error("Failed to fetch Pokémon:", error);
       }
     }
 
     fetchPokemon();
-  }, [navigate]);
+  }, []);
 
   const handleNavigatePokemon = (direction) => {
     setCurrentPokemonIndex((prev) =>
-      direction === 'left'
+      direction === "left"
         ? prev > 0
           ? prev - 1
           : pokemonTeam.length - 1
@@ -68,10 +66,20 @@ function PokemonStats() {
 
   const currentPokemon = pokemonTeam[currentPokemonIndex];
 
+  const goBack = () => {
+    props.onBack();
+  };
+  const handleAddPokemon = () => {
+    props.onAddPokemon();
+  };
+  const handleSetting = () => {
+    props.onSettings();
+  };
+
   function StatsDisplay({ stats }) {
     return (
       <div className="text-lg">
-        {' '}
+        {" "}
         {/* Larger text for the entire container */}
         <h1 className="text-2xl font-bold text-black-500 uppercase tracking-wide mb-2">
           Stats
@@ -90,17 +98,6 @@ function PokemonStats() {
       </div>
     );
   }
-
-  const goBack = () => {
-    navigate(-1); // Navigates back
-  };
-
-  const handleAddPokemon = () => {
-    navigate('/TeamList');
-  };
-  const handleSetting = () => {
-    navigate('/Setting');
-  };
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
@@ -156,15 +153,17 @@ function PokemonStats() {
               </div>
             </div>
           ) : (
-            <p>No Pokémon available.</p>
+            <p className="text-2xl font-bold text-black-500 uppercase tracking-wide mb-2 mt-2 bg-black text-white font-bold p-2 rounded-lg shadow-lg flex justify-between items-center">
+              No Pokémon available.
+            </p>
           )}
           <div className="w-full md:w-1/2 lg:w-1/2 mt-3 bg-orange-400 rounded-lg shadow-lg">
             <div className="p-5">
-              <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-between items-center">
+              <div className="mt-2 bg-green-500 text-white font-bold p-10 rounded-lg shadow-lg flex justify-center items-center">
                 {currentPokemon ? (
                   <StatsDisplay stats={currentPokemon.stats} />
                 ) : (
-                  <p>Loading stats...</p>
+                  <p>No Pokémon!</p>
                 )}
               </div>
             </div>

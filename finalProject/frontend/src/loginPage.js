@@ -1,43 +1,10 @@
 import React, { useState } from "react";
 import pokemon from "./pokemon.png";
-// import TeamList from "./teamList";
-import { useNavigate } from "react-router-dom";
 
-function LoginPage() {
-  const navigate = useNavigate();
+function LoginPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  // const handleLogin = async (event) => {
-  //   event.preventDefault(); // Prevent the form from submitting in the traditional way
-  //   const loginDetails = {
-  //     loginName: email,
-  //     password: password,
-  //   };
-
-  //   try {
-  //     const response = await fetch("http://localhost:8081/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(loginDetails),
-  //     });
-
-  //     if (response.ok) {
-  //       // const data = await response.json();
-  //       // localStorage.setItem("userToken", data.token);
-  //       navigate("/PokemonStats");
-  //     } else {
-  //       const errorText = await response.text();
-  //       setErrorMessage(errorText);
-  //     }
-  //   } catch (error) {
-  //     console.error("Login request failed:", error);
-  //     setErrorMessage("Login request failed, please check your network.");
-  //   }
-  // };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -56,29 +23,22 @@ function LoginPage() {
       });
 
       if (response.ok) {
-        try {
-          const data = await response.json(); // Attempt to parse JSON
-          localStorage.setItem("userToken", data.token); // Try to store the token
-          localStorage.setItem("loginName", loginDetails.loginName);
+        const data = await response.json();
+        localStorage.setItem("userToken", data.token);
+        localStorage.setItem("loginName", loginDetails.loginName);
 
-          navigate("/PokemonStats");
-        } catch (parseError) {
-          console.error("Error parsing JSON:", parseError);
-          setErrorMessage("Failed to parse server response");
-        }
+        props.onLoginSuccess();
       } else {
-        const errorText = await response.text(); // Read response as text
-        console.error("Server responded with error:", errorText);
+        const errorText = await response.text();
         setErrorMessage(errorText);
       }
-    } catch (networkError) {
-      console.error("Login request failed:", networkError);
+    } catch (error) {
       setErrorMessage("Login request failed, please check your network.");
     }
   };
 
   const handleSignUp = () => {
-    navigate("/SignUp");
+    props.onNavigateToSignUp();
   };
 
   return (

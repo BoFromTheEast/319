@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import pokemon from "./pokemon2.png";
 
-function SignUp() {
-  const navigate = useNavigate();
+function SignUp(props) {
   const [formData, setFormData] = useState({
     name: "", //handle name value
     email: "", //handle email value
@@ -18,7 +16,7 @@ function SignUp() {
   }, []);
 
   const goBack = () => {
-    navigate(-1); // Navigates back
+    props.onBack(); // Navigates back
   };
 
   const handleChange = (event) => {
@@ -42,7 +40,7 @@ function SignUp() {
       });
 
       if (response.ok) {
-        navigate("/LoginPage"); // Navigate on successful sign up
+        props.onSubmit(); // Navigate on successful sign up
       } else {
         const text = await response.text();
         alert(`Failed to sign up: ${text}`);

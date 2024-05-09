@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import setting from './setting.png';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import setting from "./setting.png";
 
-function PokemonInfoPage() {
-  const navigate = useNavigate();
+function PokemonInfoPage(props) {
   const { id } = useParams();
   const [moves, setMoves] = useState([]);
   useEffect(() => {
-    document.body.style.backgroundColor = 'orange'; // Set background when component mounts
+    document.body.style.backgroundColor = "orange"; // Set background when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
     };
   }, []);
 
   const goBack = () => {
-    navigate(-1); // Navigates back
+    props.onBack(); // Navigates back
   };
   const handleSetting = () => {
-    navigate('/Setting');
+    props.onSettings();
   };
 
   return (
@@ -44,7 +43,7 @@ function PokemonInfoPage() {
             type="text"
             placeholder="Search Pokemon"
             className="flex-1 text-black"
-            style={{ padding: '8px', fontSize: '16px' }}
+            style={{ padding: "8px", fontSize: "16px" }}
             // value={searchTerm}
             // onChange={(e) => setSearchTerm(e.target.value)}
           />
