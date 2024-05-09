@@ -7,7 +7,6 @@ function LoginPage(props) {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  
   useEffect(() => {
     // Set background GIF and color when component mounts
     document.body.style.backgroundColor = "pink";

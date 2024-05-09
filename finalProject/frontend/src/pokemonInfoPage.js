@@ -1,72 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import setting from "./setting.png";
 
 function PokemonInfoPage(props) {
   // const { id } = useParams();
   const { id } = props;
   console.log("Pokemon ID:", id);
 
+  const [pokemonDetails, setPokemonDetails] = useState(null);
   const [pokemonMoves, setPokemonMoves] = useState([]);
   const [moves, setMoves] = useState([]);
   const [moveSearchTerm, setMoveSearchTerm] = useState("");
   const [filteredMoves, setFilteredMoves] = useState([]);
+
   //fetch all moves that a pokemon can learn
-  useEffect(() => {
-    const userEmail = localStorage.getItem("loginName");
-    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/moves`)
-      .then((response) => response.json())
-      .then((data) => {
-        setMoves(data);
-        console.log(data); // Log the updated moves
-      })
-      .catch((error) => console.error("Error fetching moves:", error));
-  }, [id]);
-  //////////
-  useEffect(() => {
-    const filtered = moves.filter((move) =>
-      move.toLowerCase().startsWith(moveSearchTerm.toLowerCase())
-    );
-    setFilteredMoves(filtered);
-  }, [moveSearchTerm, moves]);
-  //////
-  useEffect(() => {
-    const userEmail = localStorage.getItem("loginName");
-    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch moves");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming data is an array of move names
-        setPokemonMoves(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching moves:", error);
-      });
-  }, [id]);
-
-  ///////
-  const fetchMoves = () => {
-    const userEmail = localStorage.getItem("loginName");
-    fetch(`http://localhost:8081/user/${userEmail}/pokemon/${id}/movess`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch moves");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming data is an array of move names
-        setPokemonMoves(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching moves:", error);
-      });
-  };
-
   useEffect(() => {
     document.body.style.backgroundColor = "orange"; // Set background when component mounts
     const userEmail = localStorage.getItem("loginName");
@@ -263,14 +208,14 @@ function PokemonInfoPage(props) {
         </div>
       </div>
 
-      <div className="space-y-4 mt-10 flex justify-center items-center">
+      {/* <div className="space-y-4 mt-10 flex justify-center items-center">
         <button
           onClick={handleSetting}
           className="bg-gray-400 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
         >
           <img src={setting} alt="setting" className="h-8 w-8" />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

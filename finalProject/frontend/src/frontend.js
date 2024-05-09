@@ -5,16 +5,21 @@ import PokemonInfoPage from "./pokemonInfoPage";
 import PokemonStats from "./pokemonStats";
 import SignUp from "./signUp";
 import Setting from "./setting.js";
+import AboutUs from "./aboutUs.js";
 
 function App() {
   const [currentView, setCurrentView] = useState("login");
-  const [history, setHistory] = useState(["login"]); // This stack helps to keep track of navigation history
+  const [history, setHistory] = useState([{ view: "login", id: null }]); // This stack helps to keep track of navigation history
   const [selectedPokemonId, setSelectedPokemonId] = useState(null);
 
   // Navigate to a new view
-  const navigateTo = (view, id = null) => {
-    setCurrentView(view);
-    setHistory((prev) => [...prev, { view, id }]); // Push new view onto history stack
+  const navigateTo = (view, id = null, updateHistory = true) => {
+    if (view !== currentView || id !== selectedPokemonId) {
+      setCurrentView(view);
+      if (updateHistory) {
+        setHistory((prev) => [...prev, { view, id }]);
+      }
+    }
   };
 
   // Go back to the previous view
@@ -26,7 +31,7 @@ function App() {
       const lastEntry = newHistory[newHistory.length - 1]; // Get the last entry from the new history
 
       setCurrentView(lastEntry.view); // Update the current view to the last entry's view
-      if (lastEntry.id) setSelectedPokemonId(lastEntry.id); // If there's an ID, update it
+      setSelectedPokemonId(lastEntry.id || null); // Ensure selectedPokemonId is updated or cleared
 
       return newHistory;
     });
@@ -52,6 +57,7 @@ function App() {
           <LoginPage
             onLoginSuccess={() => navigateTo("pokemonstats")}
             onNavigateToSignUp={() => navigateTo("signup")}
+            onAboutUs={() => navigateTo("aboutus")}
           />
         );
       case "teamlist":
@@ -75,12 +81,14 @@ function App() {
         return <Setting onBack={handleBack} />;
       case "signup":
         return <SignUp onBack={handleBack} onSubmit={handleLogin} />;
+      case "aboutus":
+        return <AboutUs onBack={handleBack} />;
       case "pokemoninfopage":
         return (
           <PokemonInfoPage
             onBack={handleBack}
             id={selectedPokemonId} // Assuming `selectedPokemonId` is defined elsewhere
-            onSettings={handleSettings}
+            // onSettings={handleSettings}
           />
         );
       default:
