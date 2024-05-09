@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // left and right button
-import LeftButton from "./leftButton.png";
-import RightButton from "./rightButton.png";
-import setting from "./setting.png";
+import LeftButton from './leftButton.png';
+import RightButton from './rightButton.png';
+import setting from './setting.png';
 // import pokemonGif from "./pokemon-gif.gif";
-import trainerGif from "./trainer.gif";
-import batlleGif from "./hot.gif";
-import axios from "axios"; // Make sure to import axios here
+import trainerGif from './trainer.gif';
+// import batlleGif from "./hot.gif";
+import axios from 'axios'; // Make sure to import axios here
 
 function PokemonStats() {
   const navigate = useNavigate();
@@ -16,20 +16,20 @@ function PokemonStats() {
   const [currentPokemonIndex, setCurrentPokemonIndex] = useState(0);
 
   useEffect(() => {
-    document.body.style.backgroundColor = "grey"; // Set background when component mounts
+    document.body.style.backgroundColor = 'grey'; // Set background when component mounts
 
     return () => {
-      document.body.style.backgroundColor = ""; // Revert on unmount if necessary
+      document.body.style.backgroundColor = ''; // Revert on unmount if necessary
     };
   }, []);
 
   useEffect(() => {
     async function fetchPokemon() {
-      const token = localStorage.getItem("userToken");
-      const loginName = localStorage.getItem("loginName");
+      const token = localStorage.getItem('userToken');
+      const loginName = localStorage.getItem('loginName');
       if (!token || !loginName) {
-        alert("Please log in again.");
-        return navigate("/login");
+        alert('Please log in again.');
+        return navigate('/login');
       }
 
       try {
@@ -41,7 +41,7 @@ function PokemonStats() {
         );
         setPokemonTeam(response.data.pokemonTeam);
       } catch (error) {
-        console.error("Failed to fetch Pokémon:", error);
+        console.error('Failed to fetch Pokémon:', error);
       }
     }
 
@@ -50,7 +50,7 @@ function PokemonStats() {
 
   const handleNavigatePokemon = (direction) => {
     setCurrentPokemonIndex((prev) =>
-      direction === "left"
+      direction === 'left'
         ? prev > 0
           ? prev - 1
           : pokemonTeam.length - 1
@@ -63,7 +63,7 @@ function PokemonStats() {
   function StatsDisplay({ stats }) {
     return (
       <div className="text-lg">
-        {" "}
+        {' '}
         {/* Larger text for the entire container */}
         <h1 className="text-2xl font-bold text-black-500 uppercase tracking-wide mb-2">
           Stats
@@ -88,10 +88,10 @@ function PokemonStats() {
   };
 
   const handleAddPokemon = () => {
-    navigate("/TeamList");
+    navigate('/TeamList');
   };
   const handleSetting = () => {
-    navigate("/Setting");
+    navigate('/Setting');
   };
 
   return (
@@ -131,7 +131,7 @@ function PokemonStats() {
                 alt={
                   currentPokemon
                     ? `Image of ${currentPokemon.name}`
-                    : "Loading Pokémon image"
+                    : 'Loading Pokémon image'
                 }
                 className="h-48 w-48" // Set image size
               />
@@ -140,13 +140,13 @@ function PokemonStats() {
 
           <div className="flex justify-between w-full px-4 mt-4">
             <button
-              onClick={() => handleNavigatePokemon("left")}
+              onClick={() => handleNavigatePokemon('left')}
               className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
             >
               <img src={LeftButton} alt="Left" className="h-8 w-8" />
             </button>
             <button
-              onClick={() => handleNavigatePokemon("right")}
+              onClick={() => handleNavigatePokemon('right')}
               className="bg-orange-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white py-2 px-4 rounded-lg mb-4"
             >
               <img src={RightButton} alt="Right" className="h-8 w-8" />
